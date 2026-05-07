@@ -17,18 +17,30 @@ const ResetPassword = () => {
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible((prev) => !prev);
   };
-  const apiUrl = "https://ritualcakes-stg-92alpha.vercel.app/api";
+
+  const validatePassword = (password) => (
+    password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password)
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
+
+    const password = newPassword.trim();
+
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long and contain at least one letter and one number");
+      return;
+    }
+
     try {
-      const response = await axios.post(`${apiUrl}/reset-password/${token}`, {
-        newPassword,
+      const response = await axios.post(`/api/reset-password/${encodeURIComponent(token)}`, {
+        newPassword: password,
       });
       setMessage(response.data.message);
       setTimeout(() => navigate("/login"), 3000); 

@@ -6,18 +6,25 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const apiUrl = `https://ritualcakes-stg-92alpha.vercel.app/api/cart`;
-  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchCart = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setCart([]);
+        return;
+      }
+
       try {
         const response = await axios.get(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCart(response.data.cartItems || []);
       } catch (error) {
-        console.error("Error fetching cart items:", error);
-        console.log("Full Error Response:", error.response?.data || error.message);
+        if (error.response?.status !== 401) {
+          console.error("Error fetching cart items:", error);
+          console.log("Full Error Response:", error.response?.data || error.message);
+        }
       }
     };
     fetchCart();

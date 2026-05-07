@@ -66,16 +66,10 @@ router.post("/reset-password/:token", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("DEBUG: Resetting password for user:", userId);
-    console.log("DEBUG: Password being tested:", `"${trimmedPassword}"`);
-    
     const hasLetter = /[A-Za-z]/.test(trimmedPassword);
     const hasNumber = /\d/.test(trimmedPassword);
     const isLongEnough = trimmedPassword.length >= 8;
     const isValid = hasLetter && hasNumber && isLongEnough;
-
-    console.log("DEBUG: hasLetter:", hasLetter, "hasNumber:", hasNumber, "isLongEnough:", isLongEnough);
-    console.log("DEBUG: Final isValid:", isValid);
 
     if (!isValid) {
       return res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one letter and one number" });
@@ -88,7 +82,7 @@ router.post("/reset-password/:token", async (req, res) => {
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
     console.error(error);
-    if (error.name === "JsonWebTokenError") {
+    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
     res.status(500).json({ message: "Error resetting password", error });
