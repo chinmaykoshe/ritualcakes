@@ -43,87 +43,132 @@ function UserButton() {
     ? new Date(user.dob).toLocaleDateString("en-GB")
     : "";
 
-  // Loading or error states
-  if (loading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-bakery-cream px-4 py-16 text-center text-bakery-chocolate">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-bakery-cream px-4 py-16">
+        <p className="mx-auto max-w-md bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-600">{error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-2 max-w-7xl md:mx-auto py-4 md:py-12 bg-white bg-opacity-70 rounded-lg md:px-2 lg:p-8 mt-2 lg:mt-16 shadow-lg">
-      <div className="container mx-auto p-2 md:py-4 md:px-6">
+    <div className="min-h-screen bg-bakery-cream px-4 py-16 md:py-24">
+      <div className="mx-auto max-w-4xl">
         <div className="mb-6">
           <Link
             to="/"
-            className="text-darkcustombg1 font-montserrat hover:text-darkcustombg1 active:text-darkcustombg2 transition-colors duration-300"
+            className="font-montserrat text-sm font-semibold text-bakery-chocolate hover:text-bakery-rose"
           >
-            &larr; Back to Home
+            &larr; Back to home
           </Link>
         </div>
 
-        <h1 className="text-3xl font-bold mb-6 text-center">Your Information</h1>
+        <div className="mb-8 text-center">
+          <p className="mb-2 font-montserrat text-xs font-semibold uppercase tracking-[0.2em] text-bakery-rose">
+            Your account
+          </p>
+          <h1 className="text-3xl font-bold text-bakery-chocolate md:text-4xl">Your Information</h1>
+          <p className="mt-3 text-sm text-customGray">
+            Manage your details and view your Ritual Cakes activity.
+          </p>
+        </div>
 
         {!user ? (
-          <div className="text-center">
-            <p className="text-red-500 font-semibold">
+          <div className="bg-white p-6 text-center shadow-premium md:p-8">
+            <p className="font-semibold text-red-600">
               Please log in to view your information.
             </p>
             <button
               onClick={() => navigate("/login")}
-              className="mt-4 bg-darkcustombg2 text-white py-2 px-6 rounded-lg hover:text-darkcustombg2 hover:bg-white hover:border-2 hover:border-darkcustombg2"
+              className="btn-premium mt-5"
             >
               Go to Login
             </button>
           </div>
         ) : (
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 shadow-premium md:p-8">
             {!isEditing ? (
               <>
-                <p className="mb-2">
-                  <strong>Name:</strong> {user.name} {user.surname}
-                </p>
-                <p className="mb-2">
-                  <strong>Email:</strong> {user.email}
-                </p>
-                <p className="mb-2">
-                  <strong>Mobile:</strong> {user.mobile}
-                </p>
-                <p className="mb-2">
-                  <strong>Date of Birth:</strong> {formattedDOB}
-                </p>
-                <p className="mb-2">
-                  <strong>Address:</strong> {user.address}
-                </p>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="mt-4 bg-yellow-500 text-white py-2 px-6 rounded-lg hover:text-yellow-500 hover:bg-white hover:border-2 hover:border-yellow-500"
-                >
-                  Edit
-                </button>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                    <span className="block font-semibold text-bakery-chocolate">Name</span>
+                    {user.name} {user.surname}
+                  </p>
+                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                    <span className="block font-semibold text-bakery-chocolate">Email</span>
+                    {user.email}
+                  </p>
+                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                    <span className="block font-semibold text-bakery-chocolate">Mobile</span>
+                    {user.mobile || "Not added"}
+                  </p>
+                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                    <span className="block font-semibold text-bakery-chocolate">Date of Birth</span>
+                    {formattedDOB || "Not added"}
+                  </p>
+                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray md:col-span-2">
+                    <span className="block font-semibold text-bakery-chocolate">Address</span>
+                    {user.address || "Not added"}
+                  </p>
+                </div>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn-outline"
+                  >
+                    Edit Details
+                  </button>
+                  <button
+                    onClick={() => navigate("/orders")}
+                    className="btn-premium"
+                  >
+                    View Orders
+                  </button>
+                  {isAdmin() && (
+                    <button
+                      onClick={() => navigate("/admin/dashboards")}
+                      className="px-8 py-3 bg-bakery-rose text-white rounded-full font-semibold transition-all duration-300 hover:bg-bakery-chocolate active:scale-95"
+                    >
+                      Admin Dashboard
+                    </button>
+                  )}
+                </div>
               </>
             ) : (
-              <form onSubmit={handleEditSubmit} className="space-y-4">
-                {/* Form fields same as before */}
+              <form onSubmit={handleEditSubmit} className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="name">Name</label>
+                  <input className="input-premium" id="name" name="name" value={formData.name} onChange={handleEditChange} />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="surname">Surname</label>
+                  <input className="input-premium" id="surname" name="surname" value={formData.surname} onChange={handleEditChange} />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="mobile">Mobile</label>
+                  <input className="input-premium" id="mobile" name="mobile" value={formData.mobile} onChange={handleEditChange} />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="dob">Date of Birth</label>
+                  <input className="input-premium" id="dob" name="dob" type="date" value={formData.dob?.slice(0, 10) || ""} onChange={handleEditChange} />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="address">Address</label>
+                  <input className="input-premium" id="address" name="address" value={formData.address} onChange={handleEditChange} />
+                </div>
+                <div className="flex flex-wrap gap-3 md:col-span-2">
+                  <button type="submit" className="btn-premium">Save Changes</button>
+                  <button type="button" onClick={() => setIsEditing(false)} className="btn-outline">Cancel</button>
+                </div>
               </form>
-            )}
-
-            <div className="mt-2">
-              <button
-                onClick={() => navigate("/orders")}
-                className="mt-4 bg-darkcustombg2 text-white py-2 px-6 rounded-lg hover:text-darkcustombg2 hover:bg-white hover:border-2 hover:border-darkcustombg2"
-              >
-                Check Your Orders Here
-              </button>
-            </div>
-
-            {/* Admin button */}
-            {isAdmin() && (
-              <div className="mt-4">
-                <button
-                  onClick={() => navigate("/admin/dashboards")}
-                  className="mt-2 bg-green-500 text-white py-2 px-6 rounded-lg hover:text-green-500 hover:bg-white hover:border-2 hover:border-green-500"
-                >
-                  Go to Admin Panel
-                </button>
-              </div>
             )}
           </div>
         )}

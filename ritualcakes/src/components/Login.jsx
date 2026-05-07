@@ -76,26 +76,34 @@ function Login() {
   };
   
   return (
-    <div className="flex justify-center items-center min-h-screen ">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg mt-2 lg:mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Sign In / Log In</h2>
+    <div className="min-h-screen bg-bakery-cream px-4 py-16 md:py-24">
+      <div className="mx-auto w-full max-w-md bg-white p-6 shadow-premium md:p-8">
+        <div className="mb-8 text-center">
+          <p className="mb-2 font-montserrat text-xs font-semibold uppercase tracking-[0.2em] text-bakery-rose">
+            Welcome back
+          </p>
+          <h2 className="text-3xl font-bold text-bakery-chocolate md:text-4xl">Sign In</h2>
+          <p className="mt-3 text-sm text-customGray">
+            Access your orders, saved details, and admin tools.
+          </p>
+        </div>
         <form onSubmit={handleSignInSubmit}>
           <div className="mb-6">
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold text-bakery-chocolate">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={signInData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-darkcustombg focus:outline-none"
+              className="input-premium"
               required
             />
           </div>
           <div className="mb-6 relative">
             <span className="flex justify-between items-center">
-              <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
-              <a href="/forgot-password" className="text-blue-600 hover:underline text-sm">Forgot password?</a>
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-bakery-chocolate">Password</label>
+              <a href="/forgot-password" className="text-sm font-semibold text-bakery-rose hover:text-bakery-chocolate">Forgot password?</a>
             </span>
             <input
               type={passwordVisible ? 'text' : 'password'}
@@ -104,13 +112,13 @@ function Login() {
               value={signInData.password}
               onChange={handleChange}
               onFocus={handleFocus}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-darkcustombg focus:outline-none pr-10"
+              className="input-premium pr-12"
               required
             />
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute mt-6 right-4 transform -translate-y-1/2"
+              className="absolute right-4 top-[2.55rem] text-bakery-chocolate/70 hover:text-bakery-chocolate"
               aria-label="Toggle password visibility"
             >
               {passwordVisible ? (
@@ -120,23 +128,22 @@ function Login() {
               )}
             </button>
           </div>
-          {errorMessages && <p className="text-red-500 text-center mb-4">{errorMessages}</p>}
-          {sucessMessages && <p className="text-green-500 text-center mb-4">{sucessMessages}</p>}
-          <hr className="my-6" />
-          <p className="text-m font-bold text-center">
-            New Customer?{' '}
-            <a href="/signup" className="text-blue-500 hover:text-blue-700">Sign Up</a>
+          {errorMessages && <p className="mb-4 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-600">{errorMessages}</p>}
+          {sucessMessages && <p className="mb-4 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-700">{sucessMessages}</p>}
+          <p className="mb-6 text-center text-sm font-semibold text-customGray">
+            New customer?{' '}
+            <a href="/signup" className="text-bakery-rose hover:text-bakery-chocolate">Create an account</a>
           </p>
           <button
             type="submit"
-            className="w-full bg-orange-300 text-white text-xl font-bold py-3 rounded-lg hover:bg-green-300 mt-6"
+            className="btn-premium w-full"
             disabled={loading}
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
           <button
             type="button"
-            className="mt-4 w-full text-gray-700 hover:text-red-400 font-medium text-xl"
+            className="mt-4 w-full py-3 text-sm font-semibold text-customGray hover:text-bakery-rose"
             onClick={() => window.history.back()}
           >
             Cancel
