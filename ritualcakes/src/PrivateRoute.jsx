@@ -10,7 +10,7 @@ function PrivateRoute({ element }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const apiUrl = '/api/user'; // note singular /user for current user
+        const apiUrl = 'https://ritualcakes-stg-92alpha.vercel.app/api/user'; // note singular /user for current user
         const response = await axios.get(apiUrl, {
           withCredentials: true, // include cookies if your auth uses them
         });

@@ -33,7 +33,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const url = "/auth/login";
+      const url = "https://ritualcakes-stg-92alpha.vercel.app/auth/login";
       const lowercasedSignInData = {
         ...signInData,
         email: signInData.email.toLowerCase(),

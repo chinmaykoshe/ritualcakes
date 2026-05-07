@@ -11,14 +11,13 @@ const ResetPassword = () => {
   const [error, setError] = useState("");
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  
   const toggleNewPasswordVisibility = () => {
     setNewPasswordVisible((prev) => !prev);
   };
   const toggleConfirmPasswordVisibility = () => {
     setConfirmPasswordVisible((prev) => !prev);
   };
-
+  const apiUrl = "https://ritualcakes-stg-92alpha.vercel.app/api";
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -28,7 +27,7 @@ const ResetPassword = () => {
       return;
     }
     try {
-      const response = await axios.post(`/api/reset-password/${token}`, {
+      const response = await axios.post(`${apiUrl}/reset-password/${token}`, {
         newPassword,
       });
       setMessage(response.data.message);

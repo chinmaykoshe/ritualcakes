@@ -17,7 +17,7 @@ const BillPage = () => {
             try {
                 if (!token) throw new Error("Token missing. Please login again.");
                 const res = await fetch(
-                    `/api/orders/id/${orderId}`,
+                    `https://ritualcakes-stg-92alpha.vercel.app/api/orders/id/${orderId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (!res.ok) throw new Error(`Failed to fetch order: ${res.status}`);

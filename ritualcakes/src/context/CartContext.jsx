@@ -5,12 +5,11 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
-  const apiUrl = `/api/cart`;
+  const apiUrl = `https://ritualcakes-stg-92alpha.vercel.app/api/cart`;
   const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchCart = async () => {
-      if (!token) return;
       try {
         const response = await axios.get(apiUrl, {
           headers: { Authorization: `Bearer ${token}` },
@@ -18,10 +17,11 @@ export const CartProvider = ({ children }) => {
         setCart(response.data.cartItems || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
+        console.log("Full Error Response:", error.response?.data || error.message);
       }
     };
     fetchCart();
-  }, [token]);
+  }, []);
 
   const addToCart = async (product) => {
     try {
@@ -39,31 +39,26 @@ export const CartProvider = ({ children }) => {
       }
       setCart(updatedCart);
 
-      if (token) {
-        const response = await axios.post(
-          `${apiUrl}/add`,
-          { products: [product] },
-          { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
-        );
-        return response.data;
-      }
+      const response = await axios.post(
+        `${apiUrl}/add`,
+        { products: [product] },
+        { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
+      );
+      return response.data;
     } catch (error) {
       setSuccessMessage("Failed to add product to cart");
       setTimeout(() => setSuccessMessage(""), 3000);
       return null;
     }
   };
-
   const updateQuantity = async (orderID, quantity) => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        await axios.post(
-          `${apiUrl}/update`,
-          { orderID, quantity },
-          { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
-        );
-      }
+      const response = await axios.post(
+        `${apiUrl}/update`,
+        { orderID, quantity },
+        { headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } }
+      );
       setCart((prevCart) => prevCart.map(item => item.orderID === orderID ? { ...item, quantity } : item));
     } catch (error) {
       console.error(error);
@@ -73,11 +68,9 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (orderID) => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        await axios.delete(`${apiUrl}/remove/${orderID}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-      }
+      await axios.delete(`${apiUrl}/remove/${orderID}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
       setCart((prevCart) => prevCart.filter(item => item.orderID !== orderID));
     } catch (error) {
       console.error(error);
@@ -87,15 +80,22 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (token) {
-        for (const item of cart) {
-          const orderID = item.orderID;
-          await axios.delete(`${apiUrl}/remove/${orderID}`, {
-            headers: { 'Authorization': `Bearer ${token}` },
-          });
+      for (const item of cart) {
+        const orderID = item.orderID;
+
+        const response = await axios.delete(`${apiUrl}/remove/${orderID}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+
+        if (response.status !== 200) {
+          console.error(`Failed to remove item with orderID: ${orderID}`);
+          return;
         }
       }
+
       setCart([]);
+      console.log("All cart items have been removed.");
+
     } catch (error) {
       console.error("Error clearing cart:", error);
     }

@@ -24,7 +24,7 @@ export const CustomizationProvider = ({ children }) => {
   const [success, setSuccess] = useState('');
   const [customizations, setCustomizations] = useState([]); 
   const yourToken = localStorage.getItem('token'); 
-
+  const apiUrl = 'https://ritualcakes-stg-92alpha.vercel.app/api'
   const fetchCustomizations = async () => {
     setLoading(true);
     setError('');
@@ -35,7 +35,7 @@ export const CustomizationProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await fetch(`/api/customizations/${userEmail}`, {
+      const response = await fetch(`${apiUrl}/customizations/${userEmail}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,6 @@ export const CustomizationProvider = ({ children }) => {
       setLoading(false); 
     }
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -62,35 +61,23 @@ export const CustomizationProvider = ({ children }) => {
       [name]: value,
     }));
   };
-
-  const submitCustomization = async (e, imageFile) => {
-    if (e) e.preventDefault();
-    const currentToken = localStorage.getItem('token');
+  const submitCustomization = async (e) => {
+    e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
-    
     try {
-      const data = new FormData();
-      Object.keys(formData).forEach(key => {
-        data.append(key, formData[key]);
-      });
-      
-      if (imageFile) {
-        data.append('image', imageFile);
-      }
-
-      const response = await fetch(`/api/customizations`, {
+      const response = await fetch(`${apiUrl}/customizations`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${currentToken}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${yourToken}`,
         },
-        body: data,
+        body: JSON.stringify(formData),
       });
-      
       if (!response.ok) {
-        const errData = await response.json();
-        setError(errData.message || 'There was an error with your submission.');
+        const errorText = await response.text();
+        setError('There was an error with your submission. Please try again.');
         return;
       }
       const result = await response.json();
@@ -115,14 +102,13 @@ export const CustomizationProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
   const updateCustomization = async (id, updatedData) => {
     setLoading(true);
     setError('');
     setSuccess('');
 
     try {
-      const response = await fetch(`/api/customizations/${id}`, {
+      const response = await fetch(`${apiUrl}/customizations/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -144,14 +130,13 @@ export const CustomizationProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
   const deleteCustomization = async (id) => {
     setLoading(true);
     setError('');
     setSuccess('');
 
     try {
-      const response = await fetch(`/api/customizations/${id}`, {
+      const response = await fetch(`${apiUrl}/customizations/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${yourToken}`,

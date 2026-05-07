@@ -5,19 +5,18 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  
+  const apiUrl = "https://ritualcakes-stg-92alpha.vercel.app/api";
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
     try {
-      const response = await axios.post(`/api/forgot-password`, { email });
+      const response = await axios.post(`${apiUrl}/forgot-password`, { email });
       setMessage(response.data.message);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen ">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg mt-2 lg:mt-16">

@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "/api/user",
+        "https://ritualcakes-stg-92alpha.vercel.app/api/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUser(response.data.user); // store backend user directly
@@ -42,7 +42,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.put(
-        "/api/user",
+        "https://ritualcakes-stg-92alpha.vercel.app/api/user",
         updatedData,
         {
           headers: {
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }) => {
 
   // Helper to check if logged-in user is admin
   const isAdmin = () => {
-    return user?.role === "admin" && user?.email === "ritualcakes2019@gmail.com";
+    return user?.role === "admin" && user?.email === "ritualcake.admin@gmail.com";
   };
 
   return (

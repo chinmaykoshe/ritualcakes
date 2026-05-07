@@ -1,5 +1,7 @@
 import axios from 'axios';
-axios.defaults.baseURL = ''; // Use relative paths to enable Vite proxy during development
+
+axios.defaults.baseURL =
+  import.meta.env.VITE_BACKEND_URL || 'https://ritualcakes-stg-92alpha.vercel.app';
 
 const useAxiosInterceptor = () => {
   axios.interceptors.response.use(

@@ -14,7 +14,7 @@ const CustomizationPanel = () => {
   const [selectedCakeType, setSelectedCakeType] = useState("");
   const [selectedApprovalStatus, setSelectedApprovalStatus] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-  const apiUrl = '/api'
+  const apiUrl = 'https://ritualcakes-stg-92alpha.vercel.app/api'
   const fetchCustomizations = async () => {
     setLoading(true);
     try {

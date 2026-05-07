@@ -34,7 +34,7 @@ const OrdersPanel = () => {
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem("token");
-  const apiUrl = `/api/orders`;
+  const apiUrl = `https://ritualcakes-stg-92alpha.vercel.app/api/orders`;
   const updateOrderStatus = async (orderId, status) => {
     if (!token) {
       console.error("Token not found");
@@ -133,7 +133,7 @@ const OrdersPanel = () => {
       (filterAmount && !isNaN(filterAmount) && order.totalAmount <= parseFloat(filterAmount));
     const matchesMinAmount = (minAmount === "" || parseFloat(minAmount) === 0) ||
       (minAmount && !isNaN(minAmount) && order.totalAmount >= parseFloat(minAmount));
-    const notFromAdmin = hideAdminOrders ? order.userEmail !== "ritualcakes2019@gmail.com" : true;
+    const notFromAdmin = hideAdminOrders ? order.userEmail !== "ritualcake.admin@gmail.com" : true;
     return matchesSearchQuery && matchesStatus && matchesDate && matchesMaxAmount && matchesMinAmount && notFromAdmin;
   });
 
