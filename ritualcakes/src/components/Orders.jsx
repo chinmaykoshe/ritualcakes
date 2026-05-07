@@ -2,292 +2,214 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useOrder } from "../context/OrderContext";
 import { useCustomization } from "../context/customizeContext";
-import { designnames } from "../designs/designassets";
-import { div } from "framer-motion/client";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaBox, FaMagic, FaArrowLeft, FaClock, FaCalendarAlt, FaMapMarkerAlt, FaPhoneAlt, FaCheckCircle, FaSpinner, FaHistory } from "react-icons/fa";
 
 function Orders() {
   const { orders } = useOrder();
-  const { customizations, setCustomizations, error: customizationError } = useCustomization();
+  const { customizations, setCustomizations } = useCustomization();
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("user");
-  const [loading, setLoading] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(false);
-  const [loadError, setLoadError] = useState(false);
-  const handleImageLoad = () => {
-    setLoading(false);
-  };
-  const handleImageError = (e) => {
-    e.target.src = "/fallback-image.png";
-    setLoading(false);
-    setHasLoaded(true);
-    setLoadError(true);
-  };
+  const [activeTab, setActiveTab] = useState("orders");
+
   useEffect(() => {
     const fetchCustomizations = async () => {
       try {
-        const response = await fetch(
-          `https://ritual-cakes-new-ogk5.vercel.app/api/customizations/${userEmail}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch customizations");
+        const response = await fetch(`/api/customizations/${userEmail}`);
+        if (response.ok) {
+          const data = await response.json();
+          setCustomizations(data);
         }
-        const data = await response.json();
-        setCustomizations(data);
       } catch (err) {
         console.error(err);
       }
     };
-
-    if (userEmail) {
-      fetchCustomizations();
-    }
+    if (userEmail) fetchCustomizations();
   }, [userEmail, setCustomizations]);
+
   if (!userEmail) {
     return (
-      <div className="mx-2 max-w-7xl md:mx-auto py-4 py-12 bg-white bg-opacity-70 rounded-lg md:px-2 lg:p-8 mt-2 lg:mt-16 shadow-lg">
-        <div className="mb-6">
-          <Link
-            to="/"
-            className="text-darkcustombg1 font-montserrat hover:text-darkcustombg1 active:text-darkcustombg2 transition-colors duration-300"
-          >
-            &larr; Back to Home
-          </Link>
-        </div>
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-6">Your Orders</h1>
-          <p className="text-lg mb-4">Please log in to view your orders and customizations.</p>
-          <button
-            onClick={() => navigate("/login")}
-            className="mt-4 bg-darkcustombg2 text-white py-2 px-6 rounded-lg hover:text-darkcustombg2 hover:bg-white hover:border-2 hover:border-darkcustombg2"
-          >
-            Go to Login
-          </button>
+      <div className="min-h-screen bg-bakery-cream/30 pt-10 pb-20">
+        <div className="container mx-auto px-6 max-w-4xl text-center space-y-8">
+          <div className="card-premium p-20 bg-white shadow-xl">
+            <h1 className="text-4xl font-serif font-bold text-bakery-chocolate mb-4">Your Ritual History</h1>
+            <p className="text-bakery-chocolate/60 mb-8">Please log in to view your orders and unique creations.</p>
+            <button onClick={() => navigate("/login")} className="btn-premium px-12">Sign In to Continue</button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-2 max-w-7xl md:mx-auto py-4 md:py-12 bg-white bg-opacity-70 rounded-lg md:px-2 lg:p-8 mt-2 lg:mt-16 shadow-lg">
-      <div className="container mx-auto p-2 md:py-4 md:px-6">
-        <div className="mb-6">
-          <Link
-            to="/"
-            className="text-darkcustombg1 font-montserrat hover:text-darkcustombg1 active:text-darkcustombg2 transition-colors duration-300"
-          >
-            &larr; Back to Home
-          </Link>
-        </div>
-        <h1 className="text-3xl font-bold mb-6 text-center">Your Orders</h1>
-        {loading ? (
-          <p className="text-center">Loading orders...</p>
-        ) : orders && orders.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 ">
-            {orders.map((order) => (
-              <div
-                key={order._id}
-                className="p-6 rounded-lg shadow-lg flex flex-col space-y-4 border border-opacity-30 border-darkcustombg2 "
-              >
-                {order.orderItems.map((item, index) => (
-                  <div>
-                    <p className="text-gray-600 font-bold text-xl my-2">Order id.: # {item._id}</p>
-                    <div className="mb-6 ">
-                      <span className="text-gray-500 text-lg ">
-                        Ordered Placed on: <strong>{new Date(order.createdAt).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                        </strong>
-                        &nbsp;To be delivered on: <strong>{new Date(order.orderDate).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                        </strong>
-                        &nbsp;at <strong><span>{order.orderTime.split(':').slice(0, 2).join(':')}</span>
-                        </strong>
-                      </span>
+    <div className="min-h-screen bg-bakery-cream/30 pt-10 pb-20">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          <div className="space-y-2">
+            <Link to="/" className="inline-flex items-center space-x-2 text-bakery-chocolate hover:text-bakery-rose transition-colors mb-4 font-bold uppercase tracking-widest text-xs">
+              <FaArrowLeft /> <span>Back to Home</span>
+            </Link>
+            <h1 className="text-5xl font-serif font-black text-bakery-chocolate">My Rituals</h1>
+            <p className="text-bakery-chocolate/40 font-medium italic">Tracking your sweet journey with us.</p>
+          </div>
+          <div className="flex bg-white p-1 rounded-2xl shadow-sm border border-bakery-pink/20">
+            <button 
+              onClick={() => setActiveTab('orders')}
+              className={`px-8 py-3 rounded-xl text-sm font-black transition-all flex items-center space-x-2 ${activeTab === 'orders' ? 'bg-bakery-rose text-white shadow-lg' : 'text-bakery-chocolate/40 hover:text-bakery-chocolate'}`}
+            >
+              <FaBox /> <span>Orders</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('customizations')}
+              className={`px-8 py-3 rounded-xl text-sm font-black transition-all flex items-center space-x-2 ${activeTab === 'customizations' ? 'bg-bakery-chocolate text-white shadow-lg' : 'text-bakery-chocolate/40 hover:text-bakery-chocolate'}`}
+            >
+              <FaMagic /> <span>Custom Creations</span>
+            </button>
+          </div>
+        </header>
+
+        <AnimatePresence mode="wait">
+          {activeTab === 'orders' ? (
+            <motion.div 
+              key="orders-tab"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              {orders && orders.length > 0 ? (
+                orders.map((order) => (
+                  <div key={order._id} className="card-premium bg-white overflow-hidden">
+                    <div className="bg-bakery-chocolate p-4 flex flex-wrap justify-between items-center gap-4 text-bakery-cream/70 text-xs font-black uppercase tracking-widest">
+                      <div className="flex items-center space-x-6">
+                        <span className="text-white">Order ID: #{order._id.slice(-8)}</span>
+                        <span>Placed: {new Date(order.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full text-white">
+                        <FaCheckCircle className="text-green-400" />
+                        <span>Status: {order.status}</span>
+                      </div>
                     </div>
-                    <hr className="border-1 border-darkcustombg1 border-opacity-20 m-4 md:mx-20" />
-                    <div
-                      key={index}
-                      className="flex flex-col md:flex-row items-start justify-between space-y-4 md:space-y-0 md:space-x-4"
-                    >
-                      <div>
-                        <div
-                          className="flex items-center space-x-4 cursor-pointer"
-                          onClick={() => navigate(`/product/${item.orderID}`)}
-                        >
-                          <img
-                            src={item.image || "/fallback-image.png"}
-                            alt={item.name}
-                            className="md:h-52 object-cover rounded-lg mb-4 md:mb-0"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-col space-y-2">
-                        <h2 className="text-xl font-bold cursor-pointer" onClick={() => navigate(`/product/${item.orderID}`)}>{item.name}</h2>
-                        <p className="text-gray-500 text-sm">Shape: {item.shape}</p>
-                        <p className="text-gray-500 text-sm">Weight: {item.weight}</p>
-                        <p className="text-gray-500 text-sm">Quantity: {item.quantity}</p>
-                        <p className="text-gray-500 text-sm">Amount: ₹ {item.price * item.quantity}</p>
-                        <p className="text-gray-500 text-lg"><strong>Message: {order.cakeMessage}</strong></p>
-                      </div>
-                      <div className="flex flex-col space-y-2 mt-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="align-left">
-                            <span
-                              className={`lg:m-2 md:m-2 mt-2 px-2 py-1 rounded 
-                            ${order.status === "Completed"
-                                  ? "bg-blue-200 text-blue-700"
-                                  : order.status === "Pending"
-                                    ? "bg-yellow-200 text-yellow-700"
-                                    : order.status === "Accepted"
-                                      ? "bg-green-200 text-green-700"
-                                      : "bg-red-200 text-red-700"
-                                }`}
-                            >
-                              {order.status}
-                            </span>
-                            <p className="lg:m-2 md:m-2 mt-2 text-gray-500 text-lg">
-                              <strong>Address: {order.deliveryAddress}</strong>
-                            </p>
+                    <div className="p-8 space-y-8">
+                      {order.orderItems.map((item, idx) => (
+                        <div key={idx} className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                          <img src={item.image || "/fallback-image.png"} alt={item.name} className="w-32 h-32 object-cover rounded-3xl shadow-premium" />
+                          <div className="flex-1 space-y-4 text-center md:text-left">
+                            <div>
+                              <h3 className="text-2xl font-serif font-bold text-bakery-chocolate">{item.name}</h3>
+                              <p className="text-sm text-bakery-chocolate/40 font-bold uppercase tracking-widest">{item.weight} • {item.shape} • Qty: {item.quantity}</p>
+                            </div>
+                            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                              <div className="flex items-center space-x-2 text-xs font-bold bg-bakery-cream px-3 py-1.5 rounded-full text-bakery-chocolate/60">
+                                <FaCalendarAlt className="text-bakery-rose" />
+                                <span>Delivery: {new Date(order.orderDate).toLocaleDateString()}</span>
+                              </div>
+                              <div className="flex items-center space-x-2 text-xs font-bold bg-bakery-cream px-3 py-1.5 rounded-full text-bakery-chocolate/60">
+                                <FaClock className="text-bakery-rose" />
+                                <span>Time: {order.orderTime}</span>
+                              </div>
+                            </div>
+                            {order.cakeMessage && (
+                              <div className="p-4 bg-bakery-rose/5 border-l-4 border-bakery-rose rounded-r-xl italic text-bakery-chocolate/70">
+                                "{order.cakeMessage}"
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <p className="text-3xl font-black text-bakery-chocolate">₹{item.price * item.quantity}</p>
+                            <p className="text-xs text-bakery-chocolate/40 font-black uppercase tracking-widest mt-1">Paid via Online</p>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                    <div className="px-8 py-6 bg-slate-50 border-t border-bakery-pink/20 flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex items-center space-x-3 text-bakery-chocolate/60">
+                        <FaMapMarkerAlt className="text-bakery-rose" />
+                        <span className="text-sm font-bold">{order.deliveryAddress}</span>
                       </div>
-                      <div className="mt-4 flex justify-center">
-                        <button
-                          onClick={() => {
-                            const confirmCall = window.confirm("Call +91 8169296802 to cancel the order! OR Reply to the mail for cancellation !");
-                            if (confirmCall) {
-                              window.location.href = "tel:+91 8169296802";
-                            }
-                          }}
-                          className="text-white bg-red-500 p-2 rounded-lg font-bold hover:bg-red-600 transition-colors"
-                        >
-                          Cancel Order
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-gray-600">You have no orders yet.</p>
-        )}
-        <div className="mt-12 space-y-8">
-          <h1 className="text-3xl font-bold mb-6 text-center">All Customizations</h1>
-          {customizations && customizations.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6">
-              {customizations.map((customization, index) => (
-                <div
-                  className="p-6 bg-white pb-14 shadow-lg rounded-lg border border-gray-200 ">
-                  <p className="text-gray-600 font-bold text-xl my-2">Order id.: # {customization._id}</p>
-                  <div className="mb-6 ">
-                    <span className="text-gray-500 text-lg ">
-                      Ordered Placed on: <strong>{new Date(customization.createdAt).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                      </strong>
-                      &nbsp;To be delivered on: <strong>{new Date(customization.deliveryDate).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                      </strong>
-                    </span>
-                  </div>
-                  <hr className="border-1 border-darkcustombg1 border-opacity-20 m-4 md:mx-20" />
-                  <div
-                    key={index}
-                    className="flex flex-col md:flex-row md:items-center lg:items-center items-left"
-                  >
-                    <div className="flex-1 space-y-2 text-gray-600 ">
-                      <p><strong>Name:</strong> {customization.name}</p>
-                      <p><strong>Email:</strong> {customization.email}</p>
-                      <p><strong>Phone:</strong> {customization.phone}</p>
-                      <p><strong>Address:</strong> {customization.address}</p>
-                      <p><strong>Size:</strong> {customization.size}</p>
-                      <p><strong>Cake Type:</strong> {customization.cakeType}</p>
-                      <p><strong>Flavor:</strong> {customization.flavor}</p>
-                      <p><strong>Message:</strong> {customization.message}</p>
-                      <p><strong>Special Instructions:</strong> {customization.specialInstructions || "N/A"}</p>
-                      <p>
-                        <span
-                          className={`px-2 py-1 rounded ${customization.approvalStatus === "approved"
-                            ? "bg-green-200 text-green-700"
-                            : customization.approvalStatus === "pending"
-                              ? "bg-yellow-200 text-yellow-700"
-                              : "bg-red-200 text-red-700"
-                            }`}
-                        >
-                          {customization.approvalStatus}
-                        </span>
-                      </p>
-                      <p className="text-lg"><strong>Price:</strong> Rs. {customization.price}</p>
-                      <p><strong>Image or Design:</strong></p>
-                      <p
-                        className="break-all overflow-hidden text-ellipsis line-clamp-3 cursor-pointer"
-                        onClick={() => {
-                          const imagePath = customization.imageOrDesign.startsWith("http")
-                            ? customization.imageOrDesign
-                            : `/design/${customization.imageOrDesign}`;
-
-                          window.open(imagePath, "_blank");
-                        }}
+                      <button 
+                        onClick={() => window.confirm("Please call +91 8169296802 for cancellations.") && (window.location.href = "tel:+918169296802")}
+                        className="text-red-400 hover:text-red-600 font-bold text-sm uppercase tracking-widest transition-colors"
                       >
-                        {customization.imageOrDesign || "No image/design provided"}
-                      </p>
-                    </div>
-                    <div className="m-4 md:mt-0 md:ml-8 md:w-1/3 lg:w-1/3 w-full">
-                      {loading && !hasLoaded && !loadError && <div className="spinner">Loading...</div>}
-                      {customization.imageOrDesign && (
-                        <img
-                          src={
-                            customization.imageOrDesign.startsWith("http")
-                              ? customization.imageOrDesign
-                              : designnames?.[customization.imageOrDesign] || "/fallback-image.png"
-                          }
-                          alt={`Design: ${customization.imageOrDesign}`}
-                          className="w-full h-full object-cover rounded-lg"
-                          loading="lazy" // Improves performance by delaying loading until needed
-                          onLoad={handleImageLoad}
-                          onError={(e) => {
-                            e.target.onerror = null; // Prevent infinite error loop
-                            e.target.src = "/fallback-image.png"; // Fallback if image fails
-                          }}
-                        />
-                      )}
-
-
-                    </div>
-
-                    <div className="mt-4 flex justify-center">
-                      <button
-                        onClick={() => {
-                          const confirmCall = window.confirm("Call +91 8169296802 to cancel the order! OR Reply to the mail for cancellation !");
-                          if (confirmCall) {
-                            window.location.href = "tel:+91 8169296802";
-                          }
-                        }}
-                        className="text-white bg-red-500 p-2 rounded-lg font-bold hover:bg-red-600 transition-colors"
-                      >
-                        Cancel Order
+                        Request Cancellation
                       </button>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="card-premium p-20 bg-white text-center space-y-6">
+                  <FaHistory className="text-5xl text-bakery-cream mx-auto" />
+                  <h3 className="text-2xl font-serif font-bold text-bakery-chocolate">No orders yet</h3>
+                  <p className="text-bakery-chocolate/40">Start your sweet ritual today!</p>
+                  <button onClick={() => navigate("/cakes")} className="btn-premium px-12">Explore Menu</button>
                 </div>
-              ))}
-            </div>
+              )}
+            </motion.div>
           ) : (
-            <p className="text-center text-gray-600">You have no customizations yet.</p>
+            <motion.div 
+              key="custom-tab"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            >
+              {customizations && customizations.length > 0 ? (
+                customizations.map((c) => (
+                  <div key={c._id} className="card-premium bg-white p-8 flex flex-col h-full border-b-8 border-bakery-chocolate">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="bg-bakery-cream px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/60">
+                        Inquiry ID: #{c._id.slice(-6)}
+                      </div>
+                      <div className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${
+                        c.approvalStatus === 'approved' ? 'bg-green-100 text-green-700' : 
+                        c.approvalStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {c.approvalStatus}
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-6">
+                      <div className="flex gap-6">
+                        {c.imageOrDesign && (
+                          <img src={c.imageOrDesign.startsWith('http') ? c.imageOrDesign : "/fallback-image.png"} alt="Custom Design" className="w-24 h-24 object-cover rounded-2xl shadow-premium border-2 border-white" />
+                        )}
+                        <div className="space-y-1">
+                          <h3 className="text-xl font-serif font-bold text-bakery-chocolate">{c.cakeType}</h3>
+                          <p className="text-xs text-bakery-rose font-black uppercase tracking-widest">{c.flavor} • {c.size}</p>
+                          <div className="flex items-center space-x-2 text-[10px] font-bold text-bakery-chocolate/40 pt-2 uppercase">
+                            <FaCalendarAlt /> <span>Delivery: {new Date(c.deliveryDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 bg-slate-50 rounded-2xl text-sm leading-relaxed text-bakery-chocolate/70">
+                        <p className="font-bold text-bakery-chocolate mb-1 uppercase text-[10px] tracking-widest">Message on Cake:</p>
+                        "{c.message}"
+                      </div>
+                    </div>
+                    <div className="mt-8 pt-6 border-t border-bakery-pink/20 flex justify-between items-center">
+                      <div>
+                        <p className="text-xs text-bakery-chocolate/30 font-black uppercase tracking-widest">Estimated Price</p>
+                        <p className="text-2xl font-black text-bakery-chocolate">₹{c.price || "TBD"}</p>
+                      </div>
+                      <button 
+                        onClick={() => window.location.href = `tel:+918169296802`}
+                        className="w-12 h-12 rounded-full bg-bakery-chocolate text-white flex items-center justify-center hover:bg-bakery-rose transition-colors shadow-lg"
+                      >
+                        <FaPhoneAlt size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="md:col-span-2 card-premium p-20 bg-white text-center space-y-6">
+                  <FaMagic className="text-5xl text-bakery-cream mx-auto" />
+                  <h3 className="text-2xl font-serif font-bold text-bakery-chocolate">No custom creations yet</h3>
+                  <p className="text-bakery-chocolate/40">Have a unique vision? Let's bring it to life.</p>
+                  <button onClick={() => navigate("/customization")} className="btn-premium px-12">Start Customizing</button>
+                </div>
+              )}
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

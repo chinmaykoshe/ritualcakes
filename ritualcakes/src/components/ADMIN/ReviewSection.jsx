@@ -6,7 +6,7 @@ const ReviewSection = () => {
   const [editedContent, setEditedContent] = useState("");
   const [error, setError] = useState(""); 
   const [searchTerm, setSearchTerm] = useState("");
-  const apiUrl = 'https://ritual-cakes-new-ogk5.vercel.app/api'
+  const apiUrl = '/api';
   useEffect(() => {
     fetchReviews();
   }, []);

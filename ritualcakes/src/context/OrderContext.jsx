@@ -8,6 +8,7 @@ export const OrderProvider = ({ children }) => {
   const [loading, setLoading] = useState(false); 
   const isFetching = useRef(false); 
   const token = localStorage.getItem('token'); 
+
   useEffect(() => {
     const fetchOrders = async () => {
       if (isFetching.current) return;
@@ -19,7 +20,7 @@ export const OrderProvider = ({ children }) => {
         if (!token || !userEmail) {
           throw new Error('Missing authentication details'); 
         }
-        const response = await axios.get(`https://ritual-cakes-new-ogk5.vercel.app/api/orders/${userEmail}`, {
+        const response = await axios.get(`/api/orders/${userEmail}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -32,7 +33,8 @@ export const OrderProvider = ({ children }) => {
       }
     };
     fetchOrders(); 
-  }, []); 
+  }, [token]); // Added token to dependencies
+
   const createOrder = async (orderData) => {
     setLoading(true); 
     try {
@@ -41,7 +43,7 @@ export const OrderProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      const response = await axios.post(`https://ritual-cakes-new-ogk5.vercel.app/api/orders`, orderData, {
+      const response = await axios.post(`/api/orders`, orderData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       });
 
@@ -52,10 +54,11 @@ export const OrderProvider = ({ children }) => {
       setLoading(false); 
     }
   };
+
   const deleteOrder = async (orderID) => {
     setLoading(true); 
     try {
-      await axios.delete(`https://ritual-cakes-new-ogk5.vercel.app/api/orders/${orderID}`, {
+      await axios.delete(`/api/orders/${orderID}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

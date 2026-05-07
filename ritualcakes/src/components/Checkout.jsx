@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useOrder } from "../context/OrderContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaArrowLeft, FaCheckCircle, FaMapMarkerAlt, FaUser, FaStickyNote, FaCalendarAlt, FaClock, FaCreditCard, FaShoppingBag } from "react-icons/fa";
 
 function Checkout() {
-  const { cart , clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
+  const { createOrder, loading } = useOrder();
+  
   const [customerName, setCustomerName] = useState("");
   const [address, setAddress] = useState("");
   const [cakeMessage, setCakeMessage] = useState("Happy Birthday");
@@ -14,24 +18,20 @@ function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState("COD"); 
   const [errorMessages, setErrorMessages] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const { createOrder, error, loading } = useOrder();
+
+  const isLoggedIn = !!localStorage.getItem("token");
+
   useEffect(() => {
     const date = new Date();
     date.setDate(date.getDate() + 2); 
     const formattedDate = date.toISOString().split("T")[0];
     setOrderDate(formattedDate); 
-    const minDate = formattedDate;
-    const orderDateInput = document.getElementById("orderDateInput");
-    if (orderDateInput) {
-      orderDateInput.setAttribute("min", minDate);
-    }
   }, []);
+
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-  const getUserEmail = () => {
-    return localStorage.getItem("user") || null;
-  };
+
   const handleOrderTimeChange = (event) => {
     const selectedTime = event.target.value;
     const selectedDate = new Date(`1970-01-01T${selectedTime}:00`);
@@ -39,21 +39,28 @@ function Checkout() {
     const endTime = new Date("1970-01-01T23:00:00");
     if (selectedDate >= startTime && selectedDate <= endTime) {
       setOrderTime(selectedTime);
+      setErrorMessages("");
     } else {
       setErrorMessages("Please select a time between 10:00 AM and 11:00 PM.");
     }
   };
+
   const handlePlaceOrder = async () => {
+    if (!isLoggedIn) {
+      // Save data and redirect to login
+      const pendingOrder = { customerName, address, cakeMessage, orderDate, orderTime, paymentMethod };
+      localStorage.setItem("pendingOrderInfo", JSON.stringify(pendingOrder));
+      navigate('/login', { state: { from: '/checkout' } });
+      return;
+    }
+
     if (!customerName || !address || !cakeMessage || !orderTime) {
-      setErrorMessages("Please fill in all fields.");
+      setErrorMessages("Please fill in all required fields.");
       return;
     }
-    const userEmail = getUserEmail();
-    if (!userEmail) {
-      setErrorMessages("User not logged in.");
-      return;
-    }
+
     try {
+      const userEmail = localStorage.getItem("user");
       const orderItems = cart.map((item) => ({
         orderID: item.orderID,
         name: item.name,
@@ -63,12 +70,12 @@ function Checkout() {
         weight: parseFloat(item.weight),
         image: item.img,
       }));
-      const totalAmount = parseFloat(calculateTotal());
+
       const orderData = {
         userEmail,
         customerName,
         orderItems,
-        totalAmount,
+        totalAmount: parseFloat(calculateTotal()),
         deliveryAddress: address,
         paymentMethod,
         cakeMessage,
@@ -76,157 +83,238 @@ function Checkout() {
         orderTime: orderTime,
         status: "Pending",
       };
+
       await createOrder(orderData);
-      setSuccessMessage("Order placed successfully!");
+      setSuccessMessage("Your ritual order has been placed successfully!");
       setTimeout(async () => {
         await clearCart();
         navigate("/orders"); 
-      }, 2000);
+      }, 2500);
     } catch (error) {
       setErrorMessages(error.response?.data?.message || "Error placing order, please try again.");
     }
   };
 
+  if (cart.length === 0 && !successMessage) {
+    return (
+      <div className="min-h-screen bg-bakery-cream/20 flex items-center justify-center p-8">
+        <div className="card-premium p-16 bg-white text-center space-y-6 max-w-xl shadow-2xl">
+          <FaShoppingBag className="text-6xl text-bakery-rose/20 mx-auto" />
+          <h2 className="text-3xl font-serif font-black text-bakery-chocolate">Your Cart is Empty</h2>
+          <p className="text-bakery-chocolate/50 font-medium">Add some sweet rituals to your cart before checking out.</p>
+          <button onClick={() => navigate("/cakes")} className="btn-premium px-12">Browse Cakes</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-2 max-w-7xl md:mx-auto py-4 md:py-12 bg-white bg-opacity-70 rounded-lg md:px-2 lg:p-8 mt-2 lg:mt-16 shadow-lg">
-      <div className="container mx-auto p-2 md:py-4 md:px-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 bg-opacity-80 mb-8"
-        >
-          &#8592; Back to Cart
-        </button>
-        <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
-        {cart.length > 0 ? (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
-            {cart.map((item) => (
-              <div key={item.orderId} className="flex items-center space-x-4 mb-6">
-                <img
-                  src={item.img}
-                  alt={item.name}
-                  className="w-24 h-24 object-cover rounded-lg"
-                />
-                <div>
-                  <h3 className="text-xl font-bold">{item.name}</h3>
-                  <p className="text-gray-500 text-sm">Shape: {item.shape}</p>
-                  <p className="text-gray-500 text-sm">Weight: {item.weight} kg</p>
-                  <p className="text-gray-500 text-sm">Quantity: {item.quantity}</p>
-                  <p className="text-lg font-bold">₹{(item.price * item.quantity).toFixed(2)}</p>
+    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+      <div className="container mx-auto px-8 lg:px-16 xl:px-24 max-w-7xl">
+        <header className="mb-16 space-y-6">
+          <button onClick={() => navigate(-1)} className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-rose transition-colors font-black uppercase tracking-widest text-xs">
+            <FaArrowLeft /> <span>Back to Cart</span>
+          </button>
+          <h1 className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate">Finalize <span className="text-bakery-rose italic font-medium">Ritual</span></h1>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          {/* Order Details Form */}
+          <div className="lg:col-span-8 space-y-12">
+            <div className="card-premium p-8 md:p-12 bg-white space-y-12">
+              
+              {/* Delivery Info */}
+              <div className="space-y-8">
+                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
+                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaMapMarkerAlt /></div>
+                  <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Delivery Details</h2>
                 </div>
-              </div>
-            ))}
-            <div className="mt-6">
-              <h3 className="text-2xl font-bold mb-4">Customer Information</h3>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-semibold mb-2">Your Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                  placeholder="Enter your name"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="address" className="block text-sm font-semibold mb-2">Delivery Address</label>
-                <textarea
-                  id="address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                  placeholder="Enter your delivery address"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="message" className="block text-sm font-semibold mb-2">Message on Cake</label>
-                <input
-                  type="text"
-                  id="message"
-                  value={cakeMessage}
-                  onChange={(e) => setCakeMessage(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                  placeholder="Enter a message for the cake"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="orderDate" className="block text-sm font-semibold mb-2"><p>Order Date</p><p className="text-xs text-gray-300">Order Date must be after 2 days</p></label>
-                <input
-                  type="date"
-                  id="orderDateInput"
-                  value={orderDate}
-                  onChange={(e) => setOrderDate(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="orderTime" className="block text-sm font-semibold mb-2">Select Delivery Time</label>
-                <input
-                  type="time"
-                  id="orderTime"
-                  value={orderTime}
-                  onChange={handleOrderTimeChange}
-                  min="10:00"
-                  max="23:00"
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-semibold mb-2">Payment Method</label>
-                <div className="flex space-x-4">
-                  <div>
-                    <input
-                      type="radio"
-                      id="cod"
-                      name="paymentMethod"
-                      value="COD"
-                      checked={paymentMethod === "COD"}
-                      onChange={() => setPaymentMethod("COD")}
-                      className="mr-2"
-                    />
-                    <label htmlFor="cod">Cash on Delivery</label>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Recipient Name</label>
+                    <div className="relative group">
+                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <input
+                        type="text"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        placeholder="Who is this for?"
+                        className="input-premium pl-12"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="online"
-                      name="paymentMethod"
-                      value="Online"
-                      checked={paymentMethod === "Online"}
-                      onChange={() => setPaymentMethod("Online")}
-                      className="mr-2"
-                    />
-                    <label htmlFor="online">Online Payment</label>
+                  
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Full Delivery Address</label>
+                    <div className="relative group">
+                      <FaMapMarkerAlt className="absolute left-4 top-4 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <textarea
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="House No, Street, Landmark..."
+                        className="input-premium pl-12 pt-3 h-24 resize-none"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={handlePlaceOrder}
-                  className="bg-darkcustombg2 text-white py-2 px-6 rounded-lg hover:bg-darkcustombg3"
-                  disabled={loading}
-                >
-                  {loading ? 'Placing Order...' : 'Place Order'}
-                </button>
+
+              {/* Cake Details */}
+              <div className="space-y-8">
+                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
+                  <div className="w-10 h-10 bg-bakery-chocolate text-white rounded-xl flex items-center justify-center shadow-lg"><FaStickyNote /></div>
+                  <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Ritual Preferences</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Message on Cake</label>
+                    <input
+                      type="text"
+                      value={cakeMessage}
+                      onChange={(e) => setCakeMessage(e.target.value)}
+                      placeholder="e.g. Happy Birthday Sarah!"
+                      className="input-premium"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Delivery Date (Min 2 days)</label>
+                    <div className="relative">
+                      <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20" />
+                      <input
+                        type="date"
+                        value={orderDate}
+                        onChange={(e) => setOrderDate(e.target.value)}
+                        min={orderDate}
+                        className="input-premium pl-12"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Delivery Time (10 AM - 11 PM)</label>
+                    <div className="relative">
+                      <FaClock className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20" />
+                      <input
+                        type="time"
+                        value={orderTime}
+                        onChange={handleOrderTimeChange}
+                        className="input-premium pl-12"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-              {errorMessages && <p className="text-red-500 text-center">{errorMessages}</p>}
-              {successMessage &&
-                <p className="text-green-500 text-center">
-                  Order Placed Sucessfully
-                  <button
-                    onClick={() => navigate("/orders")}
-                    className="m-4 bg-darkcustombg2 text-white py-2 px-6 rounded-lg hover:text-darkcustombg2 hover:bg-white hover:border-2 hover:border-darkcustombg2"
+
+              {/* Payment Method */}
+              <div className="space-y-8">
+                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
+                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaCreditCard /></div>
+                  <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Payment Method</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <button 
+                    onClick={() => setPaymentMethod("COD")}
+                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'COD' ? 'border-bakery-rose bg-bakery-rose/5 shadow-inner' : 'border-bakery-pink/20 hover:border-bakery-rose/30'}`}
                   >
-                    Check Your Orders Here
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'COD' ? 'border-bakery-rose' : 'border-bakery-pink'}`}>
+                      {paymentMethod === 'COD' && <div className="w-3 h-3 bg-bakery-rose rounded-full" />}
+                    </div>
+                    <div className="text-left">
+                      <p className="font-black text-bakery-chocolate uppercase text-xs tracking-widest">Pay on Delivery</p>
+                      <p className="text-[10px] text-bakery-chocolate/40 font-bold">Pay when your ritual arrives</p>
+                    </div>
                   </button>
-                </p>}
+
+                  <button 
+                    onClick={() => setPaymentMethod("Online")}
+                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'Online' ? 'border-bakery-rose bg-bakery-rose/5 shadow-inner' : 'border-bakery-pink/20 hover:border-bakery-rose/30'}`}
+                  >
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'Online' ? 'border-bakery-rose' : 'border-bakery-pink'}`}>
+                      {paymentMethod === 'Online' && <div className="w-3 h-3 bg-bakery-rose rounded-full" />}
+                    </div>
+                    <div className="text-left">
+                      <p className="font-black text-bakery-chocolate uppercase text-xs tracking-widest">Online Payment</p>
+                      <p className="text-[10px] text-bakery-chocolate/40 font-bold">Secure UPI or Card Payment</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {errorMessages && (
+                <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 text-sm font-bold flex items-center gap-3">
+                  <div className="w-2 h-2 bg-red-600 rounded-full" />
+                  {errorMessages}
+                </div>
+              )}
+
+              <button
+                onClick={handlePlaceOrder}
+                disabled={loading}
+                className="w-full btn-premium py-5 text-xl font-black shadow-xl transform active:scale-[0.98] transition-all"
+              >
+                {loading ? "Processing..." : isLoggedIn ? "Complete Ritual Order" : "Login to Complete Order"}
+              </button>
             </div>
           </div>
-        ) : (
-          <p className="text-center text-lg">Your cart is empty!</p>
-        )}
+
+          {/* Order Summary Sidebar */}
+          <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
+            <div className="card-premium p-8 bg-white space-y-8 border-2 border-bakery-rose/10 shadow-2xl">
+              <h2 className="text-2xl font-serif font-black text-bakery-chocolate border-b border-bakery-pink pb-4">Order Summary</h2>
+              
+              <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                {cart.map((item) => (
+                  <div key={item.orderID} className="flex items-center gap-4">
+                    <img src={item.img} alt={item.name} className="w-16 h-16 object-cover rounded-xl shadow-sm" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-bakery-chocolate truncate">{item.name}</h4>
+                      <p className="text-[10px] font-black text-bakery-chocolate/40 uppercase tracking-widest">{item.weight} • {item.quantity} Unit</p>
+                    </div>
+                    <p className="font-black text-bakery-chocolate">₹{(item.price * item.quantity).toFixed(0)}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-6 border-t border-bakery-pink/30 space-y-4">
+                <div className="flex justify-between text-bakery-chocolate/50 font-bold text-xs uppercase tracking-widest">
+                  <span>Subtotal</span>
+                  <span>₹{calculateTotal().toFixed(0)}</span>
+                </div>
+                <div className="flex justify-between text-bakery-chocolate/50 font-bold text-xs uppercase tracking-widest">
+                  <span>Delivery</span>
+                  <span className="text-green-500">Free</span>
+                </div>
+                <div className="pt-4 flex justify-between items-end">
+                  <span className="font-serif font-black text-bakery-chocolate text-xl">Total Amount</span>
+                  <span className="text-4xl font-black text-bakery-rose">₹{calculateTotal().toFixed(0)}</span>
+                </div>
+              </div>
+            </div>
+
+            {successMessage && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="card-premium p-8 bg-green-50 text-green-700 text-center space-y-6 border border-green-100"
+              >
+                <FaCheckCircle className="text-5xl mx-auto" />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-serif font-black">Success!</h3>
+                  <p className="text-sm font-medium">{successMessage}</p>
+                </div>
+                <button onClick={() => navigate("/orders")} className="w-full py-3 bg-green-600 text-white rounded-xl font-black text-xs uppercase tracking-widest">Check Orders</button>
+              </motion.div>
+            )}
+          </aside>
+        </div>
       </div>
     </div>
   );

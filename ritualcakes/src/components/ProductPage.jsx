@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { elements } from "../assets/assets";
 import Card from "./Card";
 import Reviews from "./Reviews.jsx";
 import { useCart } from "../context/CartContext"; 
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPlus, FaMinus, FaStar, FaShoppingBag, FaArrowLeft } from "react-icons/fa";
 
 const ProductPage = () => {
   const { orderId } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [weight, setWeight] = useState("500g");
@@ -15,8 +18,6 @@ const ProductPage = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [price, setPrice] = useState(0);
   const { addToCart } = useCart();
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,10 +34,8 @@ const ProductPage = () => {
     if (product) {
       setPrice(product.prices[weight]);
       const availableShapes = getAvailableShapes(weight);
-      if (availableShapes.includes("Round")) {
-        setShape("Round");
-      } else {
-        setShape("Square");
+      if (!availableShapes.includes(shape)) {
+        setShape(availableShapes[0]);
       }
     }
   }, [product, weight]);
@@ -56,28 +55,12 @@ const ProductPage = () => {
     }
   }, [product]);
 
-
-  const handleQuantityChange = (action) => {
-    setQuantity((prev) => Math.max(1, action === "increment" ? prev + 1 : prev - 1));
-  };
-
   const getAvailableShapes = (weight) => {
-    const weightKg = parseFloat(weight);
-    if (weightKg === 500) return ["Round", "Heart", "Square"];
-    if (weightKg <= 1) return ["Round", "Heart", "Square"];
-    if (weightKg <= 1.5) return ["Round", "Square"];
-    return ["Square"];
+    if (weight === "500g") return ["Round", "Heart", "Square"];
+    return ["Round", "Square"];
   };
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
   const handleAddToCart = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setErrorMessage("Please sign in to add items to your cart");
-      setTimeout(() => setErrorMessage(""), 3000);
-      return;
-    }
     setLoading(true);
     try { 
       const productToAdd = {
@@ -89,144 +72,166 @@ const ProductPage = () => {
         price,
         img: product.img,
       };
-      const response = await addToCart(productToAdd);
-      if (response) {
-        setSuccessMessage("Product added successfully");
-        setTimeout(() => setSuccessMessage(""), 3000);
-      }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      setErrorMessage("Failed to add product. Please try again.");
-      setTimeout(() => setErrorMessage(""), 3000); 
+      await addToCart(productToAdd);
     } finally {
       setLoading(false);
     }
   };
-  if (!product) {
-    return (
-      <div className="text-center mt-16">
-        <h2 className="text-xl font-semibold text-darkcustomGray">Product not found</h2>
-        <p className="text-customGray">The product you are looking for does not exist.</p>
-      </div>
-    );
-  }
+
+  if (!product) return null;
 
   return (
-    <div className="mx-2 max-w-7xl md:mx-auto px-4 py-12 bg-white bg-opacity-30 rounded-lg px-4 lg:p-8 lg:m-top-16 shadow-lg relative">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8">
-        <div className="flex-1">
-          <img
-            src={product.img}
-            alt={product.name}
-            className="w-full justify-center object-cover h-[200px] md:h-[500px] rounded-lg shadow-md"
-            onError={(e) => (e.target.src = "./assets/fallbackImage.png")}
-          />
-        </div>
-        <div className="flex-1 lg:pr-24">
-          <h1 className="text-3xl lg:text-6xl font-bold mt-2 mb-2 md:mb-4 text-darkcustomGray">{product.name}</h1>
-          {product.rating && (
-            <p className="text-base lg:text-lg text-darkcustomGray mb-2">Rating: {product.rating} ⭐</p>
-          )}
-          <p className="text-xl lg:text-3xl md:mt-8 mt-2 font-semibold text-gray-600 mb-4 md:mb-6">
-            Price: Rs. {price * quantity}
-          </p>
-          <p className="font-bold text-sm lg:text-lg text-darkcustomGray mb-2">Select Weight:</p>
-          <div className="flex flex-wrap gap-4 lg:gap-6 mb-4 lg:mb-6">
-            {Object.keys(product.prices).map((weightOption) => (
-              <div
-                key={weightOption}
-                className={`w-12 h-8 lg:w-20 lg:h-12 flex items-center justify-center text-center text-sm lg:text-xl font-semibold rounded-lg border-2 cursor-pointer ${weight === weightOption ? "bg-darkcustombg darkcustombg1 border-darkcustombg" : "bg-white border-darkcustombg"
-                  }`}
-                onClick={() => setWeight(weightOption)}
-              >
-                {weightOption}
+    <div className="min-h-screen bg-bakery-cream/30 pt-10 pb-20">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="inline-flex items-center space-x-2 text-bakery-chocolate hover:text-bakery-rose transition-colors mb-8 font-bold uppercase tracking-widest text-sm"
+        >
+          <FaArrowLeft /> <span>Back</span>
+        </button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          {/* Product Image */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative group"
+          >
+            <div className="absolute -inset-4 bg-bakery-rose/10 rounded-[60px] group-hover:bg-bakery-rose/20 transition-all duration-700" />
+            <img 
+              src={product.img} 
+              alt={product.name} 
+              className="relative z-10 w-full h-[600px] object-cover rounded-[50px] shadow-premium"
+            />
+          </motion.div>
+
+          {/* Product Details */}
+          <div className="space-y-10">
+            <header className="space-y-4">
+              <div className="flex items-center space-x-2 text-bakery-rose">
+                {[...Array(5)].map((_, i) => <FaStar key={i} />)}
+                <span className="text-sm font-bold text-bakery-chocolate/40 ml-2">(4.8 / 5 Rating)</span>
               </div>
+              <h1 className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate leading-tight">{product.name}</h1>
+              <p className="text-3xl font-black text-bakery-rose">₹{price * quantity}</p>
+            </header>
+
+            <div className="space-y-8">
+              {/* Weight Selection */}
+              <div className="space-y-4">
+                <p className="text-sm font-black uppercase tracking-widest text-bakery-chocolate/40">Choose Weight</p>
+                <div className="flex flex-wrap gap-3">
+                  {Object.keys(product.prices).map((w) => (
+                    <button
+                      key={w}
+                      onClick={() => setWeight(w)}
+                      className={`px-6 py-3 rounded-2xl border-2 font-bold transition-all ${
+                        weight === w 
+                          ? 'border-bakery-rose bg-bakery-rose text-white shadow-lg' 
+                          : 'border-bakery-pink hover:border-bakery-rose/30 text-bakery-chocolate'
+                      }`}
+                    >
+                      {w}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Shape Selection */}
+              <div className="space-y-4">
+                <p className="text-sm font-black uppercase tracking-widest text-bakery-chocolate/40">Select Shape</p>
+                <div className="flex flex-wrap gap-3">
+                  {getAvailableShapes(weight).map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setShape(s)}
+                      className={`px-6 py-3 rounded-2xl border-2 font-bold transition-all ${
+                        shape === s 
+                          ? 'border-bakery-chocolate bg-bakery-chocolate text-white shadow-lg' 
+                          : 'border-bakery-pink hover:border-bakery-rose/30 text-bakery-chocolate'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quantity */}
+              <div className="space-y-4">
+                <p className="text-sm font-black uppercase tracking-widest text-bakery-chocolate/40">Quantity</p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center bg-white rounded-2xl p-1 shadow-sm border border-bakery-pink">
+                    <button 
+                      onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-cream transition-colors text-bakery-chocolate"
+                    >
+                      <FaMinus />
+                    </button>
+                    <span className="w-12 text-center font-black text-xl">{quantity}</span>
+                    <button 
+                      onClick={() => setQuantity(q => q + 1)}
+                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-cream transition-colors text-bakery-chocolate"
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleAddToCart}
+              disabled={loading}
+              className="w-full btn-premium py-5 text-xl flex items-center justify-center space-x-4 shadow-xl active:scale-95 transition-transform"
+            >
+              <FaShoppingBag />
+              <span>{loading ? "Adding Ritual..." : "Add to Cart"}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tabs Section */}
+        <div className="mt-24">
+          <div className="flex space-x-12 border-b border-bakery-pink mb-12">
+            {['Description', 'Reviews'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab.toLowerCase())}
+                className={`pb-6 text-xl font-serif font-bold transition-all relative ${
+                  activeTab === tab.toLowerCase() ? 'text-bakery-chocolate' : 'text-bakery-chocolate/30 hover:text-bakery-chocolate/60'
+                }`}
+              >
+                {tab}
+                {activeTab === tab.toLowerCase() && (
+                  <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 w-full h-1 bg-bakery-rose" />
+                )}
+              </button>
             ))}
           </div>
-          <p className="font-bold text-sm md:text-lg text-darkcustomGray mb-2">Select Shape:</p>
-          <div className="flex flex-wrap gap-4 md:gap-6 mb-4 md:mb-6">
-            {getAvailableShapes(weight).map((shapeOption) => (
-              <div
-                key={shapeOption}
-                className={`w-16 h-8 lg:w-20 lg:h-12 flex items-center justify-center text-center text-sm md:text-xl font-semibold rounded-lg border-2 cursor-pointer ${shape === shapeOption ? "bg-darkcustombg text-darkcustombg1 border-darkcustombg" : "bg-white border-darkcustombg"
-                  }`}
-                onClick={() => setShape(shapeOption)}
-              >
-                {shapeOption}
-              </div>
-            ))}
-          </div>
-          <p className="font-bold text-sm md:text-lg text-darkcustomGray mb-2">Select Quantity:</p>
-          <div className="flex items-center mb-2 md:mb-4">
-            <button
-              onClick={() => handleQuantityChange("decrement")}
-              className="px-2 md:px-4 py-1 md:py-2 border rounded hover:bg-darkcustombg"
-            >
-              -
-            </button>
-            <span className="px-2 md:px-4 py-1 md:py-2 border mx-1 md:mx-2 text-sm md:text-base">{quantity}</span>
-            <button
-              onClick={() => handleQuantityChange("increment")}
-              className="px-2 md:px-4 py-1 md:py-2 border rounded hover:bg-darkcustombg"
-            >
-              +
-            </button>
-          </div>
-          {errorMessage && <p className="text-red-500 text-center p-2">{errorMessage}</p>}
-          {successMessage && <p className="text-darkcustombg2 text-center p-2">{successMessage}</p>}
-          <button
-            type="submit"
-            className={`w-full font-bold mt-4 py-2 px-6 rounded-lg ${loading
-                ? "opacity-50 cursor-not-allowed bg-darkcustombg2 text-white"
-                : "bg-darkcustombg2 text-white hover:text-darkcustombg2 hover:bg-white hover:border-2 hover:border-darkcustombg2"
-              }`}
-            onClick={handleAddToCart}
-            disabled={loading} 
-          >
-            {loading ? "Adding to Cart..." : "Add to Cart"}
-          </button>
 
+          <div className="min-h-[300px]">
+            {activeTab === 'description' ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="prose prose-xl text-bakery-chocolate/70 leading-relaxed max-w-4xl">
+                <p>{product.description || "A masterpiece of baking ritual. Our artisanal cakes are made with fresh, carefully chosen ingredients and a genuine love for baking. From selecting quality flour, chocolate, and fruits, we use precision and care at every stage."}</p>
+              </motion.div>
+            ) : (
+              <Reviews orderID={product.orderID} />
+            )}
+          </div>
         </div>
-      </div>
-      <div className="mt-8 md:mt-12">
-        <div className="tabs flex flex-wrap border-b mb-4 md:mb-6">
-          <button
-            onClick={() => setActiveTab("description")}
-            className={`px-2 md:px-4 py-1 md:py-2 font-semibold text-sm md:text-base ${activeTab === "description"
-                ? "text-darkcustombg2 border-b-2 border-darkcustombg2"
-                : "text-gray-500 hover:text-darkcustombg2"
-              }`}
-          >
-            Description
-          </button>
-          <button
-            onClick={() => setActiveTab("reviews")}
-            className={`px-2 md:px-4 py-1 md:py-2 font-semibold text-sm md:text-base ${activeTab === "reviews"
-                ? "text-darkcustombg2 border-b-2 border-darkcustombg2"
-                : "text-gray-500 hover:text-darkcustombg2"
-              }`}
-          >
-            Reviews
-          </button>
-        </div>
-        {activeTab === "description" ? (
-          <p className="mt-4 text-gray-500">{product.description}</p>
 
-        ) : (
-          <Reviews orderID={product.orderID} />
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-24 space-y-12">
+            <h2 className="text-4xl font-serif font-bold">You Might Also Love</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {relatedProducts.map((p) => (
+                <Card key={p.orderID} orderID={p.orderID} />
+              ))}
+            </div>
+          </div>
         )}
-      </div>
-      <div className="mt-12">
-        <h2 className="text-xl font-semibold text-darkcustomGray">Related Products</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-          {relatedProducts.length > 0 ? (
-            relatedProducts.map((relatedProduct) => (
-              <Card key={relatedProduct.orderID} orderID={relatedProduct.orderID} />
-            ))
-          ) : (
-            <p>No related products found.</p>
-          )}
-        </div>
       </div>
     </div>
   );

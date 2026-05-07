@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const OrderModel = require('../Models/Order');
+console.log("DEBUG: orderRoutes.js loaded");
+
 const UserModel = require('../Models/User');
 const ensureAuthenticated = require('./Middlewares/auth'); 
 const transporter = require('../Controllers/mailer'); 
@@ -29,6 +31,7 @@ router.get('/orders', ensureAuthenticated, async (req, res) => {
 });
 
 router.post('/orders', ensureAuthenticated, async (req, res) => {
+  console.log("DEBUG: POST /api/orders received");
   try {
     const {
       userEmail,
@@ -40,21 +43,24 @@ router.post('/orders', ensureAuthenticated, async (req, res) => {
       orderDate,
       orderTime,
     } = req.body;
+    
+    console.log("DEBUG: Data extracted:", { userEmail, totalAmount, paymentMethod });
+
     if (!userEmail || !orderItems || !totalAmount || !deliveryAddress || !paymentMethod || !orderDate) {
+      console.log("DEBUG: Missing fields validation failed");
       return res.status(400).json({ message: 'Missing required fields' });
     }
-    const validPaymentMethods = ['COD', 'Online'];
-    if (!validPaymentMethods.includes(paymentMethod)) {
-      return res.status(400).json({ message: 'Invalid payment method' });
-    }
-    if (cakeMessage && cakeMessage.length > 100) {
-      return res.status(400).json({ message: 'Cake message must be 100 characters or less' });
-    }
+    
     const userEmailNormalized = userEmail.toLowerCase();
+    console.log("DEBUG: Looking for user:", userEmailNormalized);
     const user = await UserModel.findOne({ email: userEmailNormalized });
+    
     if (!user) {
+      console.log("DEBUG: User not found in DB");
       return res.status(404).json({ message: 'User not found' });
     }
+    
+    console.log("DEBUG: User found:", user.name);
     const userName = `${user.name} ${user.surname}`;
     const newOrder = new OrderModel({
       userEmail: userEmailNormalized,

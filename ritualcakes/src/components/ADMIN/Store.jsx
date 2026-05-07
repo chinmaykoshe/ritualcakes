@@ -41,7 +41,7 @@ function Store() {
 
   const placeOrder = async (selectedCake) => {
     try {
-      const userEmail = localStorage.getItem('user') || 'ritualcake.admin@gmail.com';
+      const userEmail = localStorage.getItem('user') || 'ritualcakes2019@gmail.com';
       if (!token) {
         toast.error('Token is missing. Please log in.');
         throw new Error('Authentication token is missing.');
@@ -73,13 +73,13 @@ function Store() {
       const adminDOB = "06/05/2022";
       const paymentMethod = 'COD';
       const cakeMessage = customMessages[selectedCake.orderID]?.trim() || 'Ordered from store';
-      const apiUrl = 'https://ritual-cakes-new-ogk5.vercel.app/api';
+      const apiUrl = '';
       if (cakeMessage.length > 100) {
         toast.error('Custom message must be 100 characters or less.');
         return;
       }
       const orderData = {
-        userEmail: "ritualcake.admin@gmail.com", // Hardcoded admin email, or use dynamic as needed
+        userEmail: "ritualcakes2019@gmail.com", // Hardcoded admin email, or use dynamic as needed
         adminName,                               // Add this if you want to save admin's name in each order
         adminMobile,                             // Add this if the API accepts
         adminDOB,                                // Add this if needed by API

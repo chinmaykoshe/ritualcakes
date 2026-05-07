@@ -45,6 +45,7 @@ import ForgotPassword from './components/ForgotPassword.jsx';
 import ResetPassword from './components/Resetpassword.jsx';
 import BillPage from './components/ADMIN/BillPage.jsx';
 import CusBillPage from './components/ADMIN/CusBillPage.jsx';
+import StoreFrontPOS from './components/ADMIN/StoreFrontPOS.jsx';
 import CompanyInfo from './components/CompanyInfo.jsx';
 
 
@@ -89,6 +90,7 @@ function App() {
                       <Route path="/admin/CakesAvailable" element={<PrivateRoute element={<CakesAvailable />} />} />
                       <Route path="/admin/orderscollection" element={<PrivateRoute element={<StoreOrders />} />} />
                       <Route path="/admin/reviewsection" element={<PrivateRoute element={<ReviewSection />} />} />
+                      <Route path="/admin/storefront" element={<PrivateRoute element={<StoreFrontPOS />} />} />
                       <Route path="/admin/bill/:orderId" element={<PrivateRoute element={<BillPage />} />} />
 
                       <Route path="/admin/cusbill/:customizationId" element={<CusBillPage />} />

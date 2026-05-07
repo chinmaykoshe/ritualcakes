@@ -11,7 +11,7 @@ const Reviews = ({ orderID }) => {
   const [error, setError] = useState(null);
   const [deletingReviewId, setDeletingReviewId] = useState(null);
   const navigate = useNavigate();
-  const apiUrl = `https://ritual-cakes-new-ogk5.vercel.app/api/reviews`;
+  const apiUrl = `/api/reviews`;
   const isLoggedIn = !!localStorage.getItem("user");
   const fetchReviews = async () => {
     try {

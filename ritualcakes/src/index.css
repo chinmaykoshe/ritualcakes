@@ -2,16 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-.font-montserrat {
-    font-family: 'Montserrat';
-  }
-  .font-nunito {
-    font-family: 'Nunito', sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
   body {
-    background-color: white;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
+    @apply font-sans text-bakery-chocolate bg-bakery-cream antialiased selection:bg-bakery-rose selection:text-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-premium {
+    @apply px-8 py-3 bg-bakery-chocolate text-bakery-cream rounded-full font-semibold 
+           transition-all duration-300 hover:bg-bakery-dark hover:shadow-premium-hover 
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-outline {
+    @apply px-8 py-3 border-2 border-bakery-chocolate text-bakery-chocolate rounded-full 
+           font-semibold transition-all duration-300 hover:bg-bakery-chocolate 
+           hover:text-bakery-cream active:scale-95;
+  }
+  .card-premium {
+    @apply bg-white rounded-2xl shadow-premium transition-all duration-500 
+           hover:shadow-premium-hover hover:-translate-y-2 overflow-hidden;
+  }
+  .input-premium {
+    @apply w-full px-4 py-3 bg-white border border-bakery-pink rounded-xl focus:outline-none 
+           focus:ring-2 focus:ring-bakery-rose focus:border-transparent transition-all duration-300;
+  }
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-bakery-cream;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-bakery-rose/50 rounded-full hover:bg-bakery-rose transition-colors;
+}
+
+@media print {
+  /* Hide the entire app UI */
+  #root, .no-print {
+    display: none !important;
+  }
+
+  /* Show ONLY the print area */
+  #print-area {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    background: white !important;
+  }
+
+  #print-area * {
+    visibility: visible !important;
+    color: black !important;
+  }
 }

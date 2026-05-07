@@ -1,5 +1,5 @@
 import axios from 'axios';
-axios.defaults.baseURL = 'https://ritual-cakes-new-ogk5.vercel.app';
+axios.defaults.baseURL = ''; // Use relative paths to enable Vite proxy during development
 
 const useAxiosInterceptor = () => {
   axios.interceptors.response.use(

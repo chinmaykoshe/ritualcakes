@@ -8,7 +8,7 @@ function Customers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showActions, setShowActions] = useState(false); // Controls "Delete" visibility
   const token = localStorage.getItem('token');
-  const apiUrl = `https://ritual-cakes-new-ogk5.vercel.app/api/users`;
+  const apiUrl = `/api/users`;
 
   useEffect(() => {
     const fetchCustomers = async () => {

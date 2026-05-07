@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import assets from "../assets/assets";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import SearchBar from "./SearchBar";
 import { useCart } from "../context/CartContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [isOpen, setIsOpen] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { cart } = useCart();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -26,119 +36,192 @@ function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    if (!token) localStorage.clear();
   }, []);
 
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Designs", path: "/designs" },
+    { name: "Cakes", path: "/cakes" },
+    { name: "Catalogue", path: "/catalogue" },
+    { name: "Custom", path: "/customization" },
+    { name: "About", path: "/about" },
+    { name: "Orders", path: "/orders" },
+  ];
+
   return (
-    <div className="mb-14">
-      <nav className="fixed top-0 left-0 w-full border-grey-200 font-montserrat bg-orange-50 bg-opacity-80 backdrop-blur-md z-[9999]">
-        <div className="w-full px-3 py-2 flex items-center justify-between mx-auto">
-          <div className="flex items-center rtl:space-x-reverse">
-            <div className="lg:hidden flex items-center mr-2">
-              <button onClick={toggleMenu} className="text-gray-900">
-                {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-              </button>
-            </div>
-            <NavLink to="/" className="flex items-center md:ml-6 mr-2">
-              <img src={assets.logo} className="h-8" alt="Logo" />
-              <span className="self-center text-xl font-bold text-customGray hidden md:block ml-4">
-                RITUAL CAKES
-              </span>
-            </NavLink>
+    <>
+      <nav
+        className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-500 ${
+          scrolled ? "py-3 glass shadow-premium" : "py-6 bg-transparent"
+        }`}
+      >
+        <div className="container mx-auto px-6 flex items-center justify-between">
+          {/* Logo */}
+          <NavLink to="/" className="flex items-center space-x-3 group">
+            <motion.img 
+              whileHover={{ rotate: 10 }}
+              src={assets.logo} 
+              className="h-10 w-auto" 
+              alt="Ritual Cakes Logo" 
+            />
+            <span className="text-xl font-serif font-black tracking-tighter text-bakery-chocolate group-hover:text-bakery-rose transition-colors">
+              RITUAL CAKES
+            </span>
+          </NavLink>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-1">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) =>
+                  `px-4 py-2 text-sm font-semibold tracking-wide transition-all duration-300 rounded-full ${
+                    isActive
+                      ? "text-white bg-bakery-chocolate shadow-premium"
+                      : "text-bakery-chocolate hover:text-bakery-rose"
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
+            ))}
           </div>
-          <div className="hidden lg:flex space-x-4 justify-center flex-grow">
-            {["Home", "Designs", "Cakes", "Catalogue", "Customization", "About", "Orders"].map(
-              (item, index) => (
-                <NavLink
-                  key={index}
-                  to={`/${item.toLowerCase()}`}
-                  className={({ isActive }) =>
-                    `text-sm font-semibold px-2 py-1 rounded-lg ${isActive ? "text-black bg-darkcustombg" : "text-gray-900"
-                    } hover:text-white hover:bg-darkcustombg`
-                  }
-                >
-                  {item}
-                </NavLink>
-              )
-            )}
-          </div>
-          <div className="ml-auto flex items-center space-x-4">
+
+          {/* Actions */}
+          <div className="flex items-center space-x-3 md:space-x-5">
             <button
-              className="relative text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out"
               onClick={() => setShowSearchBar(!showSearchBar)}
+              className="p-2 text-bakery-chocolate hover:text-bakery-rose transition-colors"
+              aria-label="Search"
             >
-              <i className="fa-solid fa-magnifying-glass md:text-2xl text-lg"></i>
+              <FaSearch className="text-xl" />
             </button>
+
             <button
-              className="relative text-gray-600 hover:text-gray-800 mx-2 transition duration-300 ease-in-out"
-              onClick={() => {
-                navigate('/cart');
-                window.location.reload();
-              }}
+              onClick={() => navigate("/cart")}
+              className="relative p-2 text-bakery-chocolate hover:text-bakery-rose transition-colors"
+              aria-label="Cart"
             >
-              <i className="fa-solid fa-cart-shopping md:text-2xl text-lg"></i>
+              <FaShoppingBag className="text-xl" />
               {cart?.length > 0 && (
-                <span className="absolute md:-top-2 md:-right-1 -top-1 -right-2 bg-red-500 text-white font-bold rounded-full md:w-5 md:h-5 w-4 h-4 text-xs flex items-center justify-center">
-                  {cart?.reduce((total, item) => total + item.quantity, 0)}
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-bakery-rose text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
                 </span>
               )}
             </button>
+
             <button
-              className="relative text-gray-600 hover:text-gray-800 mx-2 transition duration-300 ease-in-out"
               onClick={() => navigate("/UserDetails")}
+              className="hidden md:block p-2 text-bakery-chocolate hover:text-bakery-rose transition-colors"
+              aria-label="User Profile"
             >
-              <i className="fa-solid fa-user md:text-2xl text-xl"></i>
+              <FaUser className="text-xl" />
             </button>
+
             <button
               type="button"
-              className="text-black bg-darkcustombg hover:bg-orange-300 hover:text-white font-bold rounded-lg text-xs md:text-sm px-2 py-2"
               onClick={isLoggedIn ? handleSignOut : () => navigate("/login")}
+              className="btn-premium py-2 px-6 text-sm hidden md:block"
             >
               {isLoggedIn ? "Sign Out" : "Sign In"}
+            </button>
+
+            {/* Mobile Toggle */}
+            <button
+              onClick={toggleMenu}
+              className="lg:hidden p-2 text-bakery-chocolate"
+              aria-label="Toggle Menu"
+            >
+              {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
           </div>
         </div>
       </nav>
-      {showSearchBar && <SearchBar showSearchBar={showSearchBar} setShowSearchBar={setShowSearchBar} />}
-      <div className={`fixed inset-0 z-40 ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
-        <div
-          className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0"
-            }`}
-          onClick={toggleMenu}
-        ></div>
-        <div
-          className={`fixed top-0 left-0 w-64 bg-white h-full shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-        >
-          <div className="flex justify-end p-4">
-            <button onClick={toggleMenu} className="text-gray-900">
-              <FaTimes size={24} />
-            </button>
-          </div>
-          <div className="space-y-4 p-4">
-            <span className="self-center text-xl font-bold text-customGray hidden md:block ml-1">
-              RITUAL CAKES
-            </span>
-            {["Home", "Designs", "Cakes", "Catalogue", "Customization", "About", "Orders"].map(
-              (item, index) => (
-                <NavLink
-                  key={index}
-                  to={`/${item.toLowerCase()}`}
-                  onClick={toggleMenu}
-                  className={({ isActive }) =>
-                    `block font-semibold px-2 py-1 rounded-lg ${isActive ? "text-black bg-darkcustombg" : "text-gray-900"
-                    } hover:text-white hover:bg-darkcustombg text-m`
-                  }
+
+      {/* Search Bar Overlay */}
+      <AnimatePresence>
+        {showSearchBar && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-0 left-0 w-full z-[1001]"
+          >
+            <SearchBar showSearchBar={showSearchBar} setShowSearchBar={setShowSearchBar} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={toggleMenu}
+              className="fixed inset-0 bg-bakery-chocolate/40 backdrop-blur-sm z-[1002]"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 w-80 h-full bg-bakery-cream shadow-2xl z-[1003] p-8"
+            >
+              <div className="flex justify-between items-center mb-12">
+                <span className="font-serif text-2xl font-bold text-bakery-chocolate">Menu</span>
+                <button onClick={toggleMenu} className="text-bakery-chocolate">
+                  <FaTimes size={28} />
+                </button>
+              </div>
+              <div className="flex flex-col space-y-6">
+                {navLinks.map((link) => (
+                  <NavLink
+                    key={link.name}
+                    to={link.path}
+                    onClick={toggleMenu}
+                    className={({ isActive }) =>
+                      `text-2xl font-serif font-medium transition-colors ${
+                        isActive ? "text-bakery-rose" : "text-bakery-chocolate hover:text-bakery-rose"
+                      }`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                ))}
+                <hr className="border-bakery-pink" />
+                <button
+                  onClick={() => {
+                    navigate("/UserDetails");
+                    toggleMenu();
+                  }}
+                  className="flex items-center space-x-3 text-xl text-bakery-chocolate"
                 >
-                  {item}
-                </NavLink>
-              )
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+                  <FaUser /> <span>My Account</span>
+                </button>
+                <button
+                  onClick={() => {
+                    isLoggedIn ? handleSignOut() : navigate("/login");
+                    toggleMenu();
+                  }}
+                  className="btn-premium w-full mt-4"
+                >
+                  {isLoggedIn ? "Sign Out" : "Sign In"}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      
+      {/* Spacer to prevent content from jumping */}
+      <div className="h-24"></div>
+    </>
   );
 }
 
 export default Navbar;
+

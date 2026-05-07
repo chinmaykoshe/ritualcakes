@@ -3,25 +3,59 @@ const Customization = require('../Models/Customizationdb');
 const moment = require('moment');
 const transporter = require('../Controllers/mailer');
 
-router.post('/customizations', async (req, res) => {
+const multer = require('multer');
+const supabase = require('../supabase');
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post('/customizations', upload.single('image'), async (req, res) => {
   try {
-    const { name, email, phone, address, size, cakeType, flavor, message, specialInstructions, deliveryDate, imageOrDesign } = req.body;
+    console.log("DEBUG: Received customization request");
+    console.log("DEBUG: Body:", req.body);
+    
+    const { name, email, phone, address, size, cakeType, flavor, message, specialInstructions, deliveryDate } = req.body;
+    let imageUrl = req.body.imageOrDesign || "";
+
+    if (req.file) {
+      console.log("DEBUG: Processing customization image:", req.file.originalname);
+      const file = req.file;
+      const fileExt = file.originalname.split('.').pop();
+      const fileName = `custom-${Date.now()}.${fileExt}`;
+      const filePath = `customizations/${fileName}`;
+
+      const { data, error: uploadError } = await supabase.storage
+          .from('ritualcakes')
+          .upload(filePath, file.buffer, {
+              contentType: file.mimetype,
+              upsert: true
+          });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+          .from('ritualcakes')
+          .getPublicUrl(filePath);
+
+      imageUrl = publicUrlData.publicUrl;
+    }
+
     const twoDaysLater = moment().add(2, 'days').startOf('day').toDate();
-    if (new Date(deliveryDate) < twoDaysLater) {
+    const finalDeliveryDate = deliveryDate ? new Date(deliveryDate) : twoDaysLater;
+
+    if (finalDeliveryDate < twoDaysLater) {
       return res.status(400).json({ message: "Delivery date must be at least two days from now." });
     }
     const customization = new Customization({
       name,
       email,
-      phone,
-      address,
+      phone: phone || "Not Provided",
+      address: address || "Not Provided",
       size,
       cakeType,
       flavor,
       message,
       specialInstructions,
-      deliveryDate,
-      imageOrDesign,
+      deliveryDate: finalDeliveryDate,
+      imageOrDesign: imageUrl,
       approvalStatus: 'pending',
       price: 0
     });
@@ -147,8 +181,13 @@ router.post('/customizations', async (req, res) => {
       subject: `New Order: ${customization._id}`,
       html: customizationDetailsHtml,
     };
-    await transporter.sendMail(mailOptionsUser);
-    await transporter.sendMail(mailOptionsAdmin);
+    try {
+        await transporter.sendMail(mailOptionsUser);
+        await transporter.sendMail(mailOptionsAdmin);
+        console.log("DEBUG: Emails sent successfully");
+    } catch (mailError) {
+        console.error("DEBUG: Failed to send emails, but customization was saved:", mailError.message);
+    }
     res.status(201).json({ message: "Customization created successfully", customization });
   } catch (error) {
     console.error(error);

@@ -13,7 +13,7 @@ const CusBillPage = () => {
   const [editMode, setEditMode] = useState(false);
   const billRef = useRef();
 
-  const apiUrl = "https://ritual-cakes-new-ogk5.vercel.app/api";
+  const apiUrl = "/api";
 
   const fetchCustomization = async () => {
     try {

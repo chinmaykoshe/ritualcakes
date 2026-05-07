@@ -1,84 +1,96 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import 'font-awesome/css/font-awesome.min.css';
+import { FaFacebook, FaInstagram, FaPhone, FaEnvelope, FaClock, FaMapMarkerAlt } from 'react-icons/fa';
+import assets from '../assets/assets';
 
 function Footer() {
   return (
-    <div className="pt-10 flex flex-col">
-      <footer className="bg-orange-50 bg-opacity-85 text-darkcustombg1 pt-4 pb-8">
-        <div className="container mx-auto px-6">
-          {/* 3 always-left-aligned columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mx-2 md:mx-16 text-left">
-            <div className="mb-6 md:mb-0 pl-2 md:pl-4 md:pr-8">
-              <Link to="/about">
-                <h2 className="text-2xl font-bold mb-4 text-darkcustombg1">About Us</h2>
-              </Link>
-              <p className="text-gray-700">
-                At Ritual Cakes, we are passionate about baking the finest cakes and goodies, always fresh from the oven.
-              </p>
-              <p className="mt-4 font-italic text-gray-500">- Jyoti Joshi COO</p>
-            </div>
-            <div className="mb-6 md:mb-0 px-2 md:px-4">
-              <h2 className="text-2xl font-bold mb-4 text-darkcustombg1">Keep Connected</h2>
-              <ul className="list-none">
-                <li className="mb-2">
-                  <a href="https://www.facebook.com/ritualcakes/" className="text-gray-700 hover:text-darkcustombg1 flex items-center">
-                    <i className="fa fa-facebook mr-2"></i> Like us on Facebook
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a href="https://www.instagram.com/ritualcakes/" className="text-gray-700 hover:text-darkcustombg1 flex items-center">
-                    <i className="fa fa-instagram mr-2"></i> Follow us on Instagram
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="px-2 md:px-4">
-              <h2 className="text-2xl font-bold mb-4 text-darkcustombg1">Contact Information</h2>
-              <address className="text-gray-700 not-italic">
-                Ritual Cakes <br />
-                Shop no.:1, Uma Imperial, Dronagiri Sec.:48 <br />
-                Dronagiri, Uran-400702, Raigad, Maharashtra, India
-              </address>
-              <p className="mt-4">
-                <i className="fa fa-clock mr-2 mb-2"></i>
-                <span className="text-gray-700 hover:text-darkcustombg1">
-                10:00 am | 10:30 pm
-                </span>
-                <br />
-                <i className="fa fa-phone mr-2"></i>
-                <a href="tel:+918169296802" className="text-gray-700 hover:text-darkcustombg1">
-                  +91 8169296802
-                </a>
-                <br />
-                <i className="fa fa-phone mr-2"></i>
-                <a href="tel:+917021482775" className="text-gray-700 hover:text-darkcustombg1">
-                  +91 7021482775
-                </a>
-              </p>
-              <p className="mt-2">
-                <i className="fa fa-envelope mr-2"></i>
-                <a href="mailto:ritualcakes2019@gmail.com" className="text-gray-700 hover:text-darkcustombg1">
-                  ritualcakes2019@gmail.com
-                </a>
-              </p>
+    <footer className="bg-bakery-chocolate text-bakery-cream pt-20 pb-10">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          
+          {/* Brand & About */}
+          <div className="space-y-6">
+            <Link to="/" className="flex items-center space-x-3">
+              <img src={assets.logo} className="h-12 w-auto brightness-0 invert" alt="Logo" />
+              <span className="text-2xl font-serif font-bold tracking-tighter">RITUAL CAKES</span>
+            </Link>
+            <p className="text-bakery-cream/70 leading-relaxed">
+              Crafting sweet moments with love and precision. Every cake is a ritual of taste and artistry, baked fresh just for you.
+            </p>
+            <div className="flex space-x-4">
+              <a href="https://facebook.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-rose transition-colors">
+                <FaFacebook />
+              </a>
+              <a href="https://instagram.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-rose transition-colors">
+                <FaInstagram />
+              </a>
             </div>
           </div>
-          {/* Bottom legal/links */}
-          <div className="mt-8 border-t border-gray-700 pt-4 text-left md:text-center">
-            <p className="text-gray-700 text-sm">
-              © 2024 Ritual Cakes. All Rights Reserved. Designed and developed by Chinmay Koshe.
-            </p>
-            <div className="mt-4 flex flex-col md:flex-row justify-start md:justify-center">
-              <Link to="/company-info" className="text-gray-700 hover:text-darkcustombg1 mx-2 text-sm">Privacy Policy</Link>
-              <Link to="/company-info" className="text-gray-700 hover:text-darkcustombg1 mx-2 text-sm">Terms &amp; Conditions</Link>
-              <Link to="/company-info" className="text-gray-700 hover:text-darkcustombg1 mx-2 text-sm">Company Information</Link>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-xl font-serif font-bold mb-6">Explore</h3>
+            <ul className="space-y-4">
+              {['Home', 'Designs', 'Cakes', 'Catalogue', 'About Us', 'Contact'].map((link) => (
+                <li key={link}>
+                  <Link to={`/${link.toLowerCase().replace(' ', '')}`} className="text-bakery-cream/70 hover:text-bakery-rose transition-colors">
+                    {link}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-xl font-serif font-bold mb-6">Contact Us</h3>
+            <ul className="space-y-4 text-bakery-cream/70">
+              <li className="flex items-start space-x-3">
+                <FaMapMarkerAlt className="mt-1 text-bakery-rose" />
+                <span>Shop no.:1, Uma Imperial, Dronagiri Sec.:48, Uran-400702</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <FaPhone className="text-bakery-rose" />
+                <a href="tel:+918169296802" className="hover:text-bakery-rose">+91 8169296802</a>
+              </li>
+              <li className="flex items-center space-x-3">
+                <FaEnvelope className="text-bakery-rose" />
+                <a href="mailto:ritualcakes2019@gmail.com" className="hover:text-bakery-rose">ritualcakes2019@gmail.com</a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Opening Hours */}
+          <div>
+            <h3 className="text-xl font-serif font-bold mb-6">Visit Us</h3>
+            <div className="bg-bakery-cream/5 p-6 rounded-2xl border border-bakery-cream/10">
+              <div className="flex items-center space-x-3 mb-4">
+                <FaClock className="text-bakery-rose" />
+                <span className="font-bold">Opening Hours</span>
+              </div>
+              <div className="space-y-2 text-sm text-bakery-cream/70">
+                <div className="flex justify-between">
+                  <span>Mon - Sun</span>
+                  <span>10:00 am - 10:30 pm</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-20 pt-8 border-t border-bakery-cream/10 flex flex-col md:flex-row justify-between items-center text-sm text-bakery-cream/50">
+          <p>© 2024 Ritual Cakes. All Rights Reserved.</p>
+          <div className="flex space-x-6 mt-4 md:mt-0">
+            <Link to="/company-info" className="hover:text-bakery-rose">Privacy Policy</Link>
+            <Link to="/company-info" className="hover:text-bakery-rose">Terms of Service</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 }
 
 export default Footer;
+

@@ -29,6 +29,7 @@ const UserSchema = new Schema({
         price: { type: Number }, 
     }],
     role: { type: String, enum: ['user', 'admin'], default: 'user' }, 
+    passwordResetSent: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const UserModel = mongoose.model('users', UserSchema);

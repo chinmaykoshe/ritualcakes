@@ -6,7 +6,7 @@ const User = require("../Models/User");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 const RESET_TOKEN_EXPIRATION = "1h";
-const FRONTEND_URL = 'https://ritual-cakes--alpha.vercel.app/';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174';
 
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -95,16 +95,20 @@ router.post("/forgot-password", async (req, res) => {
 
     res.status(200).json({ message: "Reset password link sent to your email.Please check you mail" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error sending reset link", error });
+    console.error("FORGOT-PASSWORD ERROR:", error);
+    res.status(500).json({ message: "Error sending reset link", error: error.message || error });
   }
 });
 router.post("/reset-password/:token", async (req, res) => {
   const { newPassword } = req.body;
   const { token } = req.params; 
+  
   if (!token || !newPassword) {
     return res.status(400).json({ message: "Token and new password are required" });
   }
+
+  const trimmedPassword = newPassword.trim();
+
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
@@ -112,11 +116,23 @@ router.post("/reset-password/:token", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(newPassword)) {
+
+    console.log("DEBUG: Resetting password for user:", userId);
+    console.log("DEBUG: Password being tested:", `"${trimmedPassword}"`);
+    
+    const hasLetter = /[A-Za-z]/.test(trimmedPassword);
+    const hasNumber = /\d/.test(trimmedPassword);
+    const isLongEnough = trimmedPassword.length >= 8;
+    const isValid = hasLetter && hasNumber && isLongEnough;
+
+    console.log("DEBUG: hasLetter:", hasLetter, "hasNumber:", hasNumber, "isLongEnough:", isLongEnough);
+    console.log("DEBUG: Final isValid:", isValid);
+
+    if (!isValid) {
       return res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one letter and one number" });
     }
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
     user.password = hashedPassword;
     await user.save();
     res.status(200).json({ message: "Password reset successful" });

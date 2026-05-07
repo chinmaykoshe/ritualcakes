@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  LineChart, Line, CartesianGrid, Legend
+  LineChart, Line, CartesianGrid, Legend, AreaChart, Area
 } from "recharts";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaWallet, FaChartBar, FaHistory, FaCalendarAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 // ---------- Utility Functions ----------
 const fillMonthWithZeros = (stats, month, year) => {
@@ -23,6 +23,7 @@ const fillMonthWithZeros = (stats, month, year) => {
   }
   return result;
 };
+
 const fillYearWithMonths = (orders, year) => {
   let monthMap = {};
   for (let m = 0; m < 12; m++) {
@@ -42,6 +43,7 @@ const fillYearWithMonths = (orders, year) => {
   });
   return Object.values(monthMap);
 };
+
 const getDailyStats = (orders) => {
   const dailyMap = {};
   orders.forEach(order => {
@@ -53,6 +55,7 @@ const getDailyStats = (orders) => {
   });
   return Object.values(dailyMap);
 };
+
 const getTopCakes = (orders) => {
   const cakeMap = {};
   orders.forEach(order => {
@@ -65,6 +68,7 @@ const getTopCakes = (orders) => {
     .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 6);
 };
+
 const getMostSoldCake = (orders) => {
   const cakeCount = {};
   orders.forEach(order => {
@@ -82,10 +86,12 @@ const getMostSoldCake = (orders) => {
   }
   return mostSold || "N/A";
 };
+
 const getMonthOptions = (orders) => {
+  if (!orders.length) return [{ year: new Date().getFullYear(), month: new Date().getMonth() }];
   const all = orders.map(order => new Date(order.createdAt));
-  const start = new Date(2025, 10, 1);
-  const end = all.length ? new Date(Math.max(...all.map(d => d.getTime()))) : new Date();
+  const start = new Date(2025, 0, 1);
+  const end = new Date(Math.max(...all.map(d => d.getTime())));
   let months = [];
   let cur = new Date(end.getFullYear(), end.getMonth(), 1);
   while (cur >= start) {
@@ -94,17 +100,18 @@ const getMonthOptions = (orders) => {
   }
   return months;
 };
+
 const getYearOptions = (orders) => {
+  if (!orders.length) return [new Date().getFullYear()];
   const all = orders.map(order => new Date(order.createdAt));
   const startYear = 2025;
-  const endYear = all.length ? new Date(Math.max(...all.map(d => d.getTime()))).getFullYear() : new Date().getFullYear();
+  const endYear = new Date(Math.max(...all.map(d => d.getTime()))).getFullYear();
   let years = [];
   for (let y = endYear; y >= startYear; y--) years.push(y);
   return years;
 };
 
 function Dashboard() {
-  // --- State ---
   const [statData, setStatData] = useState({ mostSoldToday: "", bestSoldAllTime: "", totalCollectionToday: 0, totalOrdersToday: 0, totalOrdersAllTime: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -116,23 +123,16 @@ function Dashboard() {
   const [salesMonthIdx, setSalesMonthIdx] = useState(0);
   const [salesYearIdx, setSalesYearIdx] = useState(0);
 
-  const [ordersMode, setOrdersMode] = useState("month");
-  const [ordersMonthIdx, setOrdersMonthIdx] = useState(0);
-  const [ordersYearIdx, setOrdersYearIdx] = useState(0);
-
-  const [cakesYearIdx, setCakesYearIdx] = useState(0);
-
-  // --- Fetch Data ---
   useEffect(() => {
     async function fetchDashboardData() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
         const role = localStorage.getItem("role");
-        if (!token) throw new Error("Token not found. Please log in again.");
-        if (role !== "admin") throw new Error("Access restricted. Only admins can view this data.");
+        if (!token) throw new Error("Please log in again.");
+        if (role !== "admin") throw new Error("Access restricted.");
 
-        const apiUrl = `https://ritual-cakes-new-ogk5.vercel.app/api/orders`;
+        const apiUrl = `/api/orders`;
         const resp = await axios.get(apiUrl, { headers: { Authorization: `Bearer ${token}` } });
 
         setAllOrders(resp.data);
@@ -158,12 +158,9 @@ function Dashboard() {
     fetchDashboardData();
   }, []);
 
-  // --- Options (dependent on filtered data) ---
   const monthOptions = getMonthOptions(filteredOrders);
   const yearOptions = getYearOptions(filteredOrders);
-  const cakesYearOptions = yearOptions;
 
-  // --- Filters ---
   const applyFilter = () => {
     if (!filter.start || !filter.end) {
       setFilteredOrders(allOrders);
@@ -174,33 +171,9 @@ function Dashboard() {
       return orderDate >= filter.start && orderDate <= filter.end;
     });
     setFilteredOrders(filtered);
-
-    const todayDate = new Date().toLocaleDateString("en-CA");
-    const todayOrders = filtered.filter(order => new Date(order.createdAt).toLocaleDateString("en-CA") === todayDate);
-
-    setStatData({
-      mostSoldToday: getMostSoldCake(todayOrders),
-      bestSoldAllTime: getMostSoldCake(filtered),
-      totalCollectionToday: todayOrders.reduce((tot, o) => tot + o.totalAmount, 0),
-      totalOrdersToday: todayOrders.length,
-      totalOrdersAllTime: filtered.length
-    });
   };
 
-  // --- Orders Chart ---
-  const ordersCurrentMonth = monthOptions[ordersMonthIdx] || { month: 10, year: 2025 };
-  const ordersCurrentYear = yearOptions[ordersYearIdx] || 2025;
-  const ordersChartData = ordersMode === "month"
-    ? fillMonthWithZeros(getDailyStats(filteredOrders.filter(o =>
-      new Date(o.createdAt).getFullYear() === ordersCurrentMonth.year &&
-      new Date(o.createdAt).getMonth() === ordersCurrentMonth.month
-    )), ordersCurrentMonth.month, ordersCurrentMonth.year)
-    : fillYearWithMonths(filteredOrders.filter(o =>
-      new Date(o.createdAt).getFullYear() === ordersCurrentYear
-    ), ordersCurrentYear);
-
-  // --- Sales Chart ---
-  const salesCurrentMonth = monthOptions[salesMonthIdx] || { month: 10, year: 2025 };
+  const salesCurrentMonth = monthOptions[salesMonthIdx] || { month: 0, year: 2025 };
   const salesCurrentYear = yearOptions[salesYearIdx] || 2025;
   const salesChartData = salesMode === "month"
     ? fillMonthWithZeros(getDailyStats(filteredOrders.filter(o =>
@@ -211,198 +184,154 @@ function Dashboard() {
       new Date(o.createdAt).getFullYear() === salesCurrentYear
     ), salesCurrentYear);
 
-  // --- Cakes Chart ---
-  const currentCakesYear = cakesYearOptions[cakesYearIdx] || 2025;
-  const cakesStats = getTopCakes(filteredOrders.filter(o =>
-    new Date(o.createdAt).getFullYear() === currentCakesYear
-  ));
-  const safeCakesStats = cakesStats.length ? cakesStats : [{ name: "None", quantity: 0 }];
+  const topCakes = getTopCakes(filteredOrders);
 
-  // --- Combined Chart (Filtered Range) ---
-  const combinedChartData = getDailyStats(filteredOrders).sort((a, b) => new Date(a.day) - new Date(b.day));
+  const stats = [
+    { title: "Total Revenue", value: `₹${filteredOrders.reduce((t, o) => t + o.totalAmount, 0).toFixed(0)}`, icon: <FaWallet />, color: "bg-blue-500" },
+    { title: "Total Orders", value: filteredOrders.length, icon: <FaShoppingCart />, color: "bg-bakery-rose" },
+    { title: "Best Selling", value: statData.bestSoldAllTime, icon: <FaChartBar />, color: "bg-bakery-chocolate" },
+    { title: "Today's Orders", value: statData.totalOrdersToday, icon: <FaHistory />, color: "bg-green-500" },
+  ];
 
-  // --- Render ---
+  if (loading) return <div className="flex items-center justify-center h-96"><div className="w-12 h-12 border-4 border-bakery-rose border-t-transparent rounded-full animate-spin"></div></div>;
+
   return (
-    <div className="p-8 h-full font-montserrat bg-orange-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-neutral-900">Dashboard</h1>
-      <p className="text-neutral-500 mt-2 mb-6">Welcome to the admin dashboard!</p>
-
-      {/* Date Filter */}
-      <div className="bg-white rounded-lg p-4 flex flex-col md:flex-row items-center gap-4 mb-6 shadow-sm">
-        <span className="font-semibold text-neutral-700 mr-2">Filter by date:</span>
-        <input type="date" className="border rounded px-2 py-1"
-          value={filter.start} max={filter.end} onChange={e => setFilter(f => ({ ...f, start: e.target.value }))} />
-        <span className="mx-2">to</span>
-        <input type="date" className="border rounded px-2 py-1"
-          value={filter.end} min={filter.start} onChange={e => setFilter(f => ({ ...f, end: e.target.value }))} />
-        <button onClick={applyFilter}
-          className="ml-2 px-4 py-1 rounded bg-darkcustombg text-white hover:bg-orange-400 transition">Apply</button>
-        <button onClick={() => {
-          setFilter({ start: "", end: "" }); setFilteredOrders(allOrders);
-          const todayDate = new Date().toLocaleDateString("en-CA");
-          const todayOrders = allOrders.filter(o => new Date(o.createdAt).toLocaleDateString("en-CA") === todayDate);
-          setStatData({
-            mostSoldToday: getMostSoldCake(todayOrders),
-            bestSoldAllTime: getMostSoldCake(allOrders),
-            totalCollectionToday: todayOrders.reduce((t, o) => t + o.totalAmount, 0),
-            totalOrdersToday: todayOrders.length,
-            totalOrdersAllTime: allOrders.length,
-          });
-        }}
-          className="ml-2 px-3 rounded bg-gray-100 text-gray-800 hover:bg-gray-200 border">Reset</button>
+    <div className="space-y-10">
+      {/* Date Filter & Actions */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white p-6 rounded-3xl shadow-premium">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-3 bg-bakery-cream/30 px-4 py-2 rounded-2xl border border-bakery-pink/20">
+            <FaCalendarAlt className="text-bakery-rose" />
+            <input 
+              type="date" 
+              className="bg-transparent border-none focus:ring-0 text-sm font-bold"
+              value={filter.start}
+              onChange={e => setFilter({...filter, start: e.target.value})}
+            />
+            <span className="text-bakery-chocolate/20">to</span>
+            <input 
+              type="date" 
+              className="bg-transparent border-none focus:ring-0 text-sm font-bold"
+              value={filter.end}
+              onChange={e => setFilter({...filter, end: e.target.value})}
+            />
+          </div>
+          <button onClick={applyFilter} className="btn-premium py-2 px-6 text-sm">Apply Filter</button>
+          <button onClick={() => {setFilter({start: "", end: ""}); setFilteredOrders(allOrders);}} className="text-sm font-bold text-bakery-chocolate/40 hover:text-bakery-rose transition-colors">Reset</button>
+        </div>
       </div>
 
-      {loading ? (
-        <div className="text-center mt-8"><p>Loading...</p></div>
-      ) : error ? (
-        <div className="text-center mt-8 text-red-500"><p>{error}</p></div>
-      ) : (
-        <>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((s, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="card-premium p-6 bg-white flex items-center space-x-4"
+          >
+            <div className={`w-14 h-14 ${s.color} text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg`}>
+              {s.icon}
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-bakery-chocolate/30">{s.title}</p>
+              <h3 className="text-2xl font-serif font-black text-bakery-chocolate mt-1">{s.value}</h3>
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
-
-          {/* Combined Orders + Sales */}
-          <div className="bg-white p-4 rounded-lg shadow mb-10">
-            <h3 className="font-semibold text-center mb-2">Orders vs Sales (Filtered Range)</h3>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={combinedChartData}>
-                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="orders" stroke="#fb923c" strokeWidth={3} dot={{ r: 2 }} name="Orders" />
-                <Line type="monotone" dataKey="collection" stroke="#eab308" strokeWidth={3} dot={{ r: 2 }} name="Sales (₹)" />
-              </LineChart>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Sales Chart */}
+        <div className="lg:col-span-2 card-premium p-8 bg-white space-y-6">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-serif font-bold">Revenue Analytics</h3>
+            <div className="flex bg-bakery-cream p-1 rounded-xl">
+              <button 
+                onClick={() => setSalesMode('month')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${salesMode === 'month' ? 'bg-white shadow-sm text-bakery-rose' : 'text-bakery-chocolate/40'}`}
+              >
+                Monthly
+              </button>
+              <button 
+                onClick={() => setSalesMode('year')}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${salesMode === 'year' ? 'bg-white shadow-sm text-bakery-rose' : 'text-bakery-chocolate/40'}`}
+              >
+                Yearly
+              </button>
+            </div>
+          </div>
+          <div className="h-[350px] w-full relative">
+            <ResponsiveContainer width="100%" height="100%" minHeight={350}>
+              <AreaChart data={salesChartData}>
+                <defs>
+                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#E57373" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#E57373" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
+                <XAxis 
+                  dataKey={salesMode === "month" ? "day" : "month"} 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{fontSize: 12, fontWeight: 600, fill: '#A0A0A0'}} 
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{fontSize: 12, fontWeight: 600, fill: '#A0A0A0'}} 
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    borderRadius: '20px', 
+                    border: 'none', 
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)', 
+                    fontWeight: 'bold' 
+                  }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="collection" 
+                  stroke="#E57373" 
+                  strokeWidth={4} 
+                  fillOpacity={1} 
+                  fill="url(#colorSales)" 
+                  animationDuration={1500}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
+        </div>
 
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div className="bg-neutral-100 rounded-lg p-6 shadow">
-              <h2 className="text-lg font-semibold text-neutral-700">Most Sold Cake (Filtered)</h2>
-              <p className="text-2xl font-bold text-neutral-900 mt-4">{statData.mostSoldToday}</p>
-            </div>
-            <div className="bg-neutral-100 rounded-lg p-6 shadow">
-              <h2 className="text-lg font-semibold text-neutral-700">Best Sold Cake All Time</h2>
-              <p className="text-2xl font-bold text-neutral-900 mt-4">{statData.bestSoldAllTime}</p>
-            </div>
-            <div className="bg-neutral-100 rounded-lg p-6 shadow">
-              <h2 className="text-lg font-semibold text-neutral-700">Sales (Filtered)</h2>
-              <p className="text-2xl font-bold text-neutral-900 mt-4">₹{filteredOrders.reduce((t, o) => t + o.totalAmount, 0).toFixed(2)}</p>
-            </div>
-            <div className="bg-neutral-100 rounded-lg p-6 shadow">
-              <h2 className="text-lg font-semibold text-neutral-700">Orders</h2>
-              <p className="text-2xl font-bold text-neutral-900 mt-4">
-                Filtered: {filteredOrders.length}<br />All Time: {statData.totalOrdersAllTime}
-              </p>
-            </div>
-          </div>
-
-          {/* Orders Chart */}
-          <div className="bg-white p-4 rounded-lg shadow mb-10">
-            <div className="flex items-center justify-between mb-2">
-              <button
-                disabled={ordersMonthIdx >= monthOptions.length - 1}
-                onClick={() => {
-                  if (ordersMode === "month") setOrdersMonthIdx(i => Math.min(i + 1, monthOptions.length - 1));
-                  else setOrdersYearIdx(i => Math.min(i + 1, yearOptions.length - 1));
-                }}>
-                <FaChevronLeft />
-              </button>
-              <div className="flex items-center gap-2">
-                <button className={`px-4 py-1 rounded-l ${ordersMode === "month" ? "bg-orange-400 text-white" : "bg-gray-100 text-gray-600"}`}
-                  onClick={() => setOrdersMode("month")}>Month</button>
-                <button className={`px-4 py-1 rounded-r ${ordersMode === "year" ? "bg-orange-400 text-white" : "bg-gray-100 text-gray-600"}`}
-                  onClick={() => setOrdersMode("year")}>Year</button>
+        {/* Top Products */}
+        <div className="card-premium p-8 bg-white space-y-6">
+          <h3 className="text-xl font-serif font-bold">Top Products</h3>
+          <div className="space-y-6">
+            {topCakes.map((cake, i) => (
+              <div key={i} className="flex items-center justify-between group">
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-bakery-cream rounded-xl flex items-center justify-center font-bold text-bakery-rose text-sm group-hover:bg-bakery-rose group-hover:text-white transition-colors">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <p className="font-bold text-bakery-chocolate line-clamp-1">{cake.name}</p>
+                    <p className="text-xs text-bakery-chocolate/40 font-bold uppercase tracking-widest">{cake.quantity} Sold</p>
+                  </div>
+                </div>
+                <div className="h-1.5 w-16 bg-bakery-cream rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-bakery-rose" 
+                    style={{ width: `${(cake.quantity / topCakes[0].quantity) * 100}%` }}
+                  />
+                </div>
               </div>
-              <button
-                disabled={ordersMonthIdx <= 0}
-                onClick={() => {
-                  if (ordersMode === "month") setOrdersMonthIdx(i => Math.max(i - 1, 0));
-                  else setOrdersYearIdx(i => Math.max(i - 1, 0));
-                }}>
-                <FaChevronRight />
-              </button>
-            </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={ordersChartData}>
-                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                <XAxis dataKey={ordersMode === "month" ? "day" : "month"} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="orders" stroke="#fb923c" strokeWidth={3} dot={{ r: 3 }} isAnimationActive={false} />
-              </LineChart>
-            </ResponsiveContainer>
+            ))}
           </div>
-
-          {/* Sales Chart */}
-          <div className="bg-white p-4 rounded-lg shadow mb-10">
-            <div className="flex items-center justify-between mb-2">
-              <button
-                disabled={salesMonthIdx >= monthOptions.length - 1}
-                className="bg-gray-100 hover:bg-orange-200 rounded-full p-2 disabled:opacity-60"
-                onClick={() => {
-                  if (salesMode === "month") setSalesMonthIdx(i => Math.min(i + 1, monthOptions.length - 1));
-                  else setSalesYearIdx(i => Math.min(i + 1, yearOptions.length - 1));
-                }}>
-                <FaChevronLeft />
-              </button>
-              <div className="flex items-center gap-2">
-                <button className={`px-4 py-1 rounded-l ${salesMode === "month" ? "bg-orange-400 text-white" : "bg-gray-100 text-gray-600"}`}
-                  onClick={() => setSalesMode("month")}>Month</button>
-                <button className={`px-4 py-1 rounded-r ${salesMode === "year" ? "bg-orange-400 text-white" : "bg-gray-100 text-gray-600"}`}
-                  onClick={() => setSalesMode("year")}>Year</button>
-              </div>
-              <button
-                disabled={salesMonthIdx <= 0}
-                className="bg-gray-100 hover:bg-orange-200 rounded-full p-2 disabled:opacity-60"
-                onClick={() => {
-                  if (salesMode === "month") setSalesMonthIdx(i => Math.max(i - 1, 0));
-                  else setSalesYearIdx(i => Math.max(i - 1, 0));
-                }}>
-                <FaChevronRight />
-              </button>
-            </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={salesChartData}>
-                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                <XAxis dataKey={salesMode === "month" ? "day" : "month"} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="collection" stroke="#eab308" strokeWidth={3} dot={{ r: 3 }} isAnimationActive={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Cakes Chart */}
-          <div className="bg-white p-4 rounded-lg shadow">
-            <div className="flex items-center justify-between mb-2">
-              <button
-                disabled={cakesYearIdx >= cakesYearOptions.length - 1}
-                onClick={() => setCakesYearIdx(i => Math.min(i + 1, cakesYearOptions.length - 1))}>
-                <FaChevronLeft />
-              </button>
-              <span className="font-semibold">Top Cakes {currentCakesYear}</span>
-              <button
-                disabled={cakesYearIdx <= 0}
-                onClick={() => setCakesYearIdx(i => Math.max(i - 1, 0))}>
-                <FaChevronRight />
-              </button>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={safeCakesStats}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="quantity" fill="#fb923c" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </>
-      )}
+          <button className="w-full btn-outline py-3 text-sm mt-4">Full Product Report</button>
+        </div>
+      </div>
     </div>
   );
 }

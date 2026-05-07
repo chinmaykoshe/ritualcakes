@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const UserModel = require('../Models/User');
+const bcrypt = require('bcryptjs');
 const ensureAuthenticated = require('./Middlewares/auth');
 
 router.get('/user', ensureAuthenticated, async (req, res) => {
