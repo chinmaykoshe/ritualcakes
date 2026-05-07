@@ -21,7 +21,7 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-    "https://ritual-cakes.vercel.app",
+    "https://ritualcakes.vercel.app",
     "https://ritualcakes-stg-92alpha.vercel.app",
 ];
 
