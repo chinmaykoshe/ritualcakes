@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
+
 function PrivateRoute({ element }) {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
@@ -24,9 +26,10 @@ function PrivateRoute({ element }) {
         });
 
         const user = response.data.user;
+        const userRole = user?.role?.toLowerCase();
+        const userEmail = user?.email?.toLowerCase();
 
-        // Simple role-based check
-        if (user?.role?.toLowerCase() === 'admin') {
+        if (userRole === 'admin' || userEmail === ADMIN_EMAIL) {
           setAuthorized(true);
         } else {
           setAuthorized(false);

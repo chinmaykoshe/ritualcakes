@@ -2,6 +2,7 @@ const router = require('express').Router();
 const UserModel = require('../Models/User');
 const bcrypt = require('bcryptjs');
 const ensureAuthenticated = require('./Middlewares/auth');
+const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
 
 router.get('/user', ensureAuthenticated, async (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.get('/user', ensureAuthenticated, async (req, res) => {
         name: user.name,
         surname: user.surname,
         email: user.email,
-        role: user.role,
+        role: user.email === ADMIN_EMAIL ? 'admin' : user.role,
         mobile: user.mobile,
         dob: user.dob,
         address: user.address,

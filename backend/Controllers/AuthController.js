@@ -2,11 +2,13 @@ const UserModel = require("../Models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const transporter = require('../Controllers/mailer'); 
+const ADMIN_EMAIL = "ritualcake2019@gmail.com";
 
 const signup = async (req, res) => {
     try {
         let { name, surname, email, password, address, mobile, dob, role } = req.body;
-        role = role || "user";
+        email = email.toLowerCase();
+        role = email === ADMIN_EMAIL ? "admin" : role || "user";
         const user = await UserModel.findOne({ email });
         if (user) {
             return res.status(409).json({ message: "User already exists...", success: false });
@@ -133,10 +135,11 @@ const signup = async (req, res) => {
 };
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required.", success: false });
         }
+        email = email.toLowerCase();
         const user = await UserModel.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "New Email detected", success: false });
@@ -145,8 +148,9 @@ const login = async (req, res) => {
         if (!isPassEqual) {
             return res.status(401).json({ message: "Invalid credentials.", success: false });
         }
+        const role = user.email === ADMIN_EMAIL ? "admin" : user.role;
         const jwtToken = jwt.sign(
-            { email: user.email, _id: user._id, role: user.role },
+            { email: user.email, _id: user._id, role },
             process.env.JWT_SECRET,
             { expiresIn: "1w" }
         );
@@ -155,7 +159,7 @@ const login = async (req, res) => {
             success: true,
             token: jwtToken,
             email: user.email,
-            role: user.role,
+            role,
         });
     } catch (err) {
         console.error("Login Error:", err);

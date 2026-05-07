@@ -3,6 +3,8 @@ import axios from "axios";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
+const ADMIN_EMAIL = "ritualcake2019@gmail.com";
+
 const OrdersPanel = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
@@ -133,7 +135,7 @@ const OrdersPanel = () => {
       (filterAmount && !isNaN(filterAmount) && order.totalAmount <= parseFloat(filterAmount));
     const matchesMinAmount = (minAmount === "" || parseFloat(minAmount) === 0) ||
       (minAmount && !isNaN(minAmount) && order.totalAmount >= parseFloat(minAmount));
-    const notFromAdmin = hideAdminOrders ? order.userEmail !== "ritualcake.admin@gmail.com" : true;
+    const notFromAdmin = hideAdminOrders ? order.userEmail?.toLowerCase() !== ADMIN_EMAIL : true;
     return matchesSearchQuery && matchesStatus && matchesDate && matchesMaxAmount && matchesMinAmount && notFromAdmin;
   });
 

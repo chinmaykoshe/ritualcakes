@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const cakes = Object.values(elements).flat();
+const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
 
 function Store() {
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -41,7 +42,7 @@ function Store() {
 
   const placeOrder = async (selectedCake) => {
     try {
-      const userEmail = localStorage.getItem('user') || 'ritualcake.admin@gmail.com';
+      const userEmail = localStorage.getItem('user') || ADMIN_EMAIL;
       if (!token) {
         toast.error('Token is missing. Please log in.');
         throw new Error('Authentication token is missing.');
@@ -79,7 +80,7 @@ function Store() {
         return;
       }
       const orderData = {
-        userEmail: "ritualcake.admin@gmail.com", // Hardcoded admin email, or use dynamic as needed
+        userEmail: userEmail || ADMIN_EMAIL,
         adminName,                               // Add this if you want to save admin's name in each order
         adminMobile,                             // Add this if the API accepts
         adminDOB,                                // Add this if needed by API

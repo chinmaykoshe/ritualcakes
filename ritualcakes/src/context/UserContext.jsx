@@ -2,6 +2,7 @@ import React, { useContext, createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const UserContext = createContext();
+const ADMIN_EMAIL = "ritualcake2019@gmail.com";
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // store backend user directly
@@ -63,8 +64,15 @@ export const UserProvider = ({ children }) => {
   const isAdmin = () => {
     const userRole = user?.role?.toLowerCase();
     const storedRole = localStorage.getItem("role")?.toLowerCase();
+    const userEmail = user?.email?.toLowerCase();
+    const storedEmail = localStorage.getItem("user")?.toLowerCase();
 
-    return userRole === "admin" || storedRole === "admin";
+    return (
+      userRole === "admin" ||
+      storedRole === "admin" ||
+      userEmail === ADMIN_EMAIL ||
+      storedEmail === ADMIN_EMAIL
+    );
   };
 
   return (
