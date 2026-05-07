@@ -61,7 +61,10 @@ export const UserProvider = ({ children }) => {
 
   // Helper to check if logged-in user is admin
   const isAdmin = () => {
-    return user?.role === "admin" && user?.email === "ritualcake.admin@gmail.com";
+    const userRole = user?.role?.toLowerCase();
+    const storedRole = localStorage.getItem("role")?.toLowerCase();
+
+    return userRole === "admin" || storedRole === "admin";
   };
 
   return (
