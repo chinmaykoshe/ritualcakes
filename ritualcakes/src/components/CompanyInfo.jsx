@@ -54,7 +54,7 @@ function CompanyInfo() {
           <span className="font-bold text-darkcustombg1">Founder:</span> Jyoti Joshi<br />
           <span className="font-bold text-darkcustombg1">Co-Founder:</span> Jitendera Joshi<br />
           <span className="font-bold text-darkcustombg1">Business Status:</span> Local bakery, direct-to-customer, home-style and custom celebration cakes<br />
-          <span className="font-bold text-darkcustombg1">Website:</span> <a href="https://ritual-cakes--alpha.vercel.app" className="text-darkcustombg1">ritual-cakes--alpha.vercel.app</a>
+          <span className="font-bold text-darkcustombg1">Website:</span> <a href="https://ritualcakes-stg-92alpha.vercel.app/" className="text-darkcustombg1">ritualcakes-stg-92alpha.vercel.app</a>
         </p>
         <p className="mt-4 text-gray-700 text-lg">
           <span className="font-bold text-darkcustombg1">Business Hours:</span> 10:00 am &ndash; 10:30 pm, all days<br />

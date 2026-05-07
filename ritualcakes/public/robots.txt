@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ritual-cakes.vercel.app/sitemap.xml
+Sitemap: https://ritualcakes-stg-92alpha.vercel.app/sitemap.xml
