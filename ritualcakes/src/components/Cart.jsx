@@ -26,15 +26,15 @@ function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
-      <div className="container mx-auto px-8 lg:px-16 xl:px-24 max-w-7xl">
+    <div className="min-h-screen bg-bakery-cream/20 pt-6 pb-20 md:pt-10 md:pb-32">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-16 xl:px-24">
         {/* Header Section */}
-        <header className="mb-16 space-y-6">
+        <header className="mb-10 space-y-5 md:mb-16 md:space-y-6">
           <Link to="/" className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-rose transition-colors font-black uppercase tracking-widest text-xs">
             <FaArrowLeft /> <span>Back to Bakery</span>
           </Link>
           <div className="flex items-center justify-between">
-            <h1 className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate">Your <span className="text-bakery-rose italic font-medium">Cart</span></h1>
+            <h1 className="text-3xl font-serif font-black text-bakery-chocolate sm:text-4xl lg:text-6xl">Your <span className="text-bakery-rose italic font-medium">Cart</span></h1>
             <div className="hidden md:flex items-center space-x-3 text-bakery-chocolate/30 font-black text-xs uppercase tracking-widest">
               <span className="text-bakery-rose">Cart</span>
               <span>•</span>
@@ -46,9 +46,9 @@ function Cart() {
         </header>
 
         {cart?.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-16">
             {/* Cart Items List */}
-            <div className="lg:col-span-8 space-y-8">
+            <div className="space-y-5 lg:col-span-8 md:space-y-8">
               <AnimatePresence mode="popLayout">
                 {cart.map((item) => (
                   <motion.div
@@ -57,20 +57,20 @@ function Cart() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="card-premium p-8 flex flex-col md:flex-row items-center gap-10 bg-white group hover:border-bakery-rose/20 transition-all border-transparent"
+                    className="card-premium group flex flex-col items-center gap-5 border-transparent bg-white p-4 transition-all hover:border-bakery-rose/20 md:flex-row md:gap-10 md:p-8"
                   >
                     <div className="relative shrink-0">
                       <div className="absolute -inset-2 bg-bakery-rose/5 rounded-3xl group-hover:bg-bakery-rose/10 transition-colors" />
                       <img
                         src={item.img}
                         alt={item.name}
-                        className="relative w-40 h-40 object-cover rounded-2xl shadow-premium group-hover:scale-[1.02] transition-transform duration-500"
+                        className="relative h-32 w-32 rounded-2xl object-cover shadow-premium transition-transform duration-500 group-hover:scale-[1.02] md:h-40 md:w-40"
                       />
                     </div>
                     
-                    <div className="flex-1 space-y-6 text-center md:text-left">
+                    <div className="flex-1 space-y-4 text-center md:space-y-6 md:text-left">
                       <div className="space-y-2">
-                        <h2 className="text-2xl font-serif font-black text-bakery-chocolate leading-tight">{item.name}</h2>
+                        <h2 className="text-xl font-serif font-black leading-tight text-bakery-chocolate md:text-2xl">{item.name}</h2>
                         <div className="flex flex-wrap justify-center md:justify-start gap-3">
                           <span className="text-[10px] font-black uppercase tracking-widest bg-bakery-cream px-3 py-1.5 rounded-full text-bakery-chocolate/60">{item.shape}</span>
                           <span className="text-[10px] font-black uppercase tracking-widest bg-bakery-cream px-3 py-1.5 rounded-full text-bakery-chocolate/60">{item.weight}</span>
@@ -105,7 +105,7 @@ function Cart() {
                       </div>
                     </div>
 
-                    <div className="md:text-right md:min-w-[120px] pt-4 md:pt-0 border-t md:border-t-0 border-bakery-pink/20 w-full md:w-auto">
+                    <div className="w-full border-t border-bakery-pink/20 pt-4 md:w-auto md:min-w-[120px] md:border-t-0 md:pt-0 md:text-right">
                       <p className="text-3xl font-black text-bakery-chocolate">₹{(item.price * item.quantity).toFixed(0)}</p>
                       <p className="text-[10px] font-black text-bakery-chocolate/30 uppercase tracking-widest mt-1">₹{item.price} per cake</p>
                     </div>
@@ -115,10 +115,10 @@ function Cart() {
             </div>
 
             {/* Order Summary Sidebar */}
-            <aside className="lg:col-span-4 space-y-8">
-              <div className="card-premium p-10 bg-white space-y-10 border-2 border-bakery-rose/10 shadow-2xl sticky top-32">
+            <aside className="lg:col-span-4">
+              <div className="card-premium sticky top-32 space-y-7 border-2 border-bakery-rose/10 bg-white p-6 shadow-2xl md:space-y-10 md:p-10">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Order Summary</h2>
+                  <h2 className="text-xl font-serif font-black text-bakery-chocolate md:text-2xl">Order Summary</h2>
                   <div className="h-1 w-12 bg-bakery-rose rounded-full" />
                 </div>
 
@@ -139,7 +139,7 @@ function Cart() {
 
                 <button
                   onClick={() => navigate("/checkout")}
-                  className="w-full btn-premium py-5 text-xl shadow-xl active:scale-[0.98] transition-all"
+                  className="btn-premium w-full py-4 text-base shadow-xl transition-all active:scale-[0.98] md:py-5 md:text-xl"
                 >
                   Checkout Now →
                 </button>
@@ -149,28 +149,22 @@ function Cart() {
                   <span>Secure SSL Encrypted Payment</span>
                 </div>
               </div>
-
-              {/* Sidebar Info */}
-              <div className="card-premium p-8 bg-bakery-chocolate text-bakery-cream text-center space-y-4">
-                <div className="inline-block px-4 py-1 bg-bakery-rose text-[10px] font-black uppercase tracking-[0.2em] rounded-full">Pro Tip</div>
-                <p className="text-sm font-medium opacity-80 leading-relaxed">Order 2+ Ritual Cakes and receive a complimentary artisan chocolate box!</p>
-              </div>
             </aside>
           </div>
         ) : (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="card-premium p-32 text-center space-y-10 bg-white max-w-4xl mx-auto shadow-2xl border-dashed border-2 border-bakery-pink/50"
+            className="card-premium mx-auto max-w-4xl space-y-8 border-2 border-dashed border-bakery-pink/50 bg-white p-8 text-center shadow-2xl md:space-y-10 md:p-32"
           >
             <div className="w-24 h-24 bg-bakery-cream rounded-full flex items-center justify-center mx-auto text-bakery-rose/20 text-6xl">
               <FaShoppingBag />
             </div>
             <div className="space-y-4">
-              <h2 className="text-4xl font-serif font-black text-bakery-chocolate">Your Cart is Quiet</h2>
+              <h2 className="text-2xl font-serif font-black text-bakery-chocolate md:text-4xl">Your Cart is Quiet</h2>
               <p className="text-bakery-chocolate/50 font-medium max-w-sm mx-auto leading-relaxed">It seems you haven't added any ritual cakes to your selection yet. Let's find something delicious!</p>
             </div>
-            <button onClick={() => navigate("/cakes")} className="btn-premium px-16 py-5 text-lg">Start Shopping</button>
+            <button onClick={() => navigate("/cakes")} className="btn-premium px-10 py-4 text-sm md:px-16 md:py-5 md:text-lg">Start Shopping</button>
           </motion.div>
         )}
       </div>

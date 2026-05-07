@@ -65,6 +65,10 @@ function App() {
 
   const isAdminPath = location.pathname.startsWith('/admin');
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
   return (
     <div className='container mx-auto max-w-none relative'>
       

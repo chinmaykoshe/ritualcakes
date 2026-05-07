@@ -81,7 +81,7 @@ function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-20 pt-8 border-t border-bakery-cream/10 flex flex-col md:flex-row justify-between items-center text-sm text-bakery-cream/50">
-          <p>© 2024 Ritual Cakes. All Rights Reserved.</p>
+          <p>&copy; 2024 Ritual Cakes. All Rights Reserved. Designed and developed by Chinmay Koshe.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/company-info" className="hover:text-bakery-rose">Privacy Policy</Link>
             <Link to="/company-info" className="hover:text-bakery-rose">Terms of Service</Link>

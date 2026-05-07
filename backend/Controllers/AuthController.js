@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const transporter = require('../Controllers/mailer'); 
 const { BRAND_EMAIL, formatDate, renderBrandedEmail } = require('./emailTemplates');
-const ADMIN_EMAIL = "ritualcake2019@gmail.com";
+const ADMIN_EMAIL = "ritualcakes2019@gmail.com";
 
 const signup = async (req, res) => {
     try {

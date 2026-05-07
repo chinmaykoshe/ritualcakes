@@ -2,7 +2,7 @@ const router = require('express').Router();
 const UserModel = require('../Models/User');
 const bcrypt = require('bcryptjs');
 const ensureAuthenticated = require('./Middlewares/auth');
-const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
+const ADMIN_EMAIL = 'ritualcakes2019@gmail.com';
 
 const isAdminUser = (user) => user?.email?.toLowerCase() === ADMIN_EMAIL;
 
@@ -52,6 +52,7 @@ router.put('/user', ensureAuthenticated, async (req, res) => {
         surname: user.surname,
         email: user.email,
         mobile: user.mobile,
+        role: isAdminUser(user) ? 'admin' : user.role,
         dob: user.dob,
         address: user.address,
       },

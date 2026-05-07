@@ -62,7 +62,7 @@ function Card({ orderID }) {
         <div className="absolute inset-0 bg-gradient-to-t from-bakery-chocolate/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         {/* Price Tag */}
-        <div className="absolute top-4 right-4 glass px-4 py-1.5 rounded-full text-sm font-black text-bakery-chocolate shadow-xl border border-white/50">
+        <div className="glass absolute right-2 top-2 rounded-full border border-white/50 px-2.5 py-1 text-[11px] font-black text-bakery-chocolate shadow-xl md:right-4 md:top-4 md:px-4 md:py-1.5 md:text-sm">
           ₹{displayPrice}
         </div>
 
@@ -71,31 +71,31 @@ function Card({ orderID }) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleAddToCart}
-          className="absolute bottom-6 right-6 w-12 h-12 bg-white text-bakery-rose rounded-2xl flex items-center justify-center shadow-2xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20"
+          className="absolute bottom-3 right-3 z-20 flex h-10 w-10 translate-y-4 items-center justify-center rounded-xl bg-white text-bakery-rose opacity-0 shadow-2xl transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:bottom-6 md:right-6 md:h-12 md:w-12 md:rounded-2xl"
         >
           <FaPlus />
         </motion.button>
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-grow space-y-3">
+      <div className="flex flex-grow flex-col space-y-2 p-3 md:space-y-3 md:p-6">
         <div className="space-y-1">
-          <h3 className="text-xl font-serif font-black text-bakery-chocolate group-hover:text-bakery-rose transition-colors line-clamp-1">
+          <h3 className="line-clamp-2 text-sm font-serif font-black leading-tight text-bakery-chocolate transition-colors group-hover:text-bakery-rose md:line-clamp-1 md:text-xl">
             {product.name}
           </h3>
-          <p className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/30">
+          <p className="text-[9px] font-black uppercase tracking-widest text-bakery-chocolate/30 md:text-[10px]">
             {product.category || "Premium Ritual"}
           </p>
         </div>
         
-        <p className="text-sm text-bakery-chocolate/50 line-clamp-2 leading-relaxed font-medium">
+        <p className="line-clamp-2 text-xs font-medium leading-relaxed text-bakery-chocolate/50 md:text-sm">
           {product.description || "Experience the ritual of pure indulgence with our artisanal baked creations."}
         </p>
         
-        <div className="pt-6 mt-auto">
+        <div className="mt-auto pt-3 md:pt-6">
           <button 
             onClick={handleAddToCart}
-            className="w-full btn-premium py-3 text-xs flex items-center justify-center space-x-2 shadow-sm group-hover:shadow-lg transition-all"
+            className="btn-premium flex w-full items-center justify-center space-x-2 px-3 py-2 text-[10px] shadow-sm transition-all group-hover:shadow-lg md:py-3 md:text-xs"
           >
             <FaShoppingBag size={12} />
             <span>Add to Cart</span>

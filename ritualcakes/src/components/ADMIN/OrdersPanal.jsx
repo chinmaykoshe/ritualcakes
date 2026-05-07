@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
-const ADMIN_EMAIL = "ritualcake2019@gmail.com";
+const ADMIN_EMAIL = "ritualcakes2019@gmail.com";
 
 const OrdersPanel = () => {
   const navigate = useNavigate();

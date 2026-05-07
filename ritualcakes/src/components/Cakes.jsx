@@ -60,14 +60,14 @@ const CakesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
-      <div className="container mx-auto px-8 lg:px-16 xl:px-24">
+    <div className="min-h-screen bg-bakery-cream/20 pt-6 pb-20 md:pt-10 md:pb-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Header Section - Airy & Centered */}
-        <header className="mb-20 text-center space-y-6">
+        <header className="mb-10 space-y-4 text-center md:mb-16 md:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-5 py-2 bg-bakery-rose/10 text-bakery-rose rounded-full font-black text-xs uppercase tracking-[0.2em]"
+            className="inline-block rounded-full bg-bakery-rose/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-bakery-rose md:px-5 md:text-xs"
           >
             The Collection
           </motion.div>
@@ -75,7 +75,7 @@ const CakesPage = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate leading-tight"
+            className="text-3xl font-serif font-black leading-tight text-bakery-chocolate sm:text-4xl lg:text-6xl"
           >
             Sweets for Every <span className="text-bakery-rose italic font-medium">Ritual</span>
           </motion.h1>
@@ -83,19 +83,19 @@ const CakesPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-bakery-chocolate/50 max-w-2xl mx-auto font-medium"
+            className="mx-auto max-w-2xl text-sm font-medium leading-relaxed text-bakery-chocolate/50 md:text-base"
           >
             Handcrafted with precision and passion. Explore our artisanal range of cakes designed to elevate your special moments.
           </motion.p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-16 items-start">
           {/* Sidebar Filters - Clearly Defined */}
-          <aside className="lg:col-span-3 space-y-12">
-            <div className="space-y-8">
+          <aside className="space-y-8 lg:col-span-3 lg:space-y-12">
+            <div className="space-y-5 md:space-y-8">
               <div className="flex items-center space-x-3 text-bakery-chocolate">
                 <FaFilter className="text-bakery-rose" />
-                <h3 className="text-xl font-serif font-black uppercase tracking-tight">Categories</h3>
+                <h3 className="text-base font-serif font-black uppercase tracking-tight md:text-xl">Categories</h3>
               </div>
               <div className="flex flex-wrap lg:flex-col gap-3">
                 {categories.map((category) => (
@@ -105,9 +105,9 @@ const CakesPage = () => {
                       setActiveCategory(category);
                       setVisibleCount(8);
                     }}
-                    className={`text-left px-6 py-3 rounded-2xl transition-all text-sm font-bold border-2 ${
+                    className={`rounded-xl border-2 px-4 py-2.5 text-left text-xs font-bold transition-all md:rounded-2xl md:px-6 md:py-3 md:text-sm ${
                       activeCategory === category
-                        ? "bg-bakery-chocolate border-bakery-chocolate text-white shadow-xl translate-x-2"
+                        ? "bg-bakery-chocolate border-bakery-chocolate text-white shadow-xl lg:translate-x-2"
                         : "bg-white border-bakery-pink/20 text-bakery-chocolate/60 hover:border-bakery-rose/30 hover:text-bakery-chocolate"
                     }`}
                   >
@@ -117,17 +117,17 @@ const CakesPage = () => {
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-5 md:space-y-6">
               <div className="flex items-center space-x-3 text-bakery-chocolate">
                 <FaSortAmountDown className="text-bakery-rose" />
-                <h3 className="text-xl font-serif font-black uppercase tracking-tight">Sort By</h3>
+                <h3 className="text-base font-serif font-black uppercase tracking-tight md:text-xl">Sort By</h3>
               </div>
               <div className="relative group">
                 <select
                   id="sortOrder"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
-                  className="w-full bg-white border-2 border-bakery-pink/20 rounded-2xl px-6 py-4 focus:outline-none focus:border-bakery-rose/50 transition-colors text-sm font-bold appearance-none shadow-sm cursor-pointer"
+                  className="w-full cursor-pointer appearance-none rounded-xl border-2 border-bakery-pink/20 bg-white px-4 py-3 text-xs font-bold shadow-sm transition-colors focus:border-bakery-rose/50 focus:outline-none md:rounded-2xl md:px-6 md:py-4 md:text-sm"
                 >
                   <option value="recommended">Recommended</option>
                   <option value="lowToHigh">Price: Low to High</option>
@@ -140,8 +140,8 @@ const CakesPage = () => {
             </div>
             
             {/* Sidebar Promo */}
-            <div className="card-premium p-8 bg-bakery-rose text-white space-y-4">
-              <h4 className="font-serif font-black text-xl">Special Event?</h4>
+            <div className="card-premium p-5 bg-bakery-rose text-white space-y-4 md:p-8">
+              <h4 className="font-serif font-black text-lg md:text-xl">Special Event?</h4>
               <p className="text-xs font-medium opacity-80 leading-relaxed">Let's create something unique. Our custom order requests are currently open.</p>
               <button className="w-full py-3 bg-white text-bakery-rose rounded-xl font-black text-xs uppercase tracking-widest hover:bg-bakery-cream transition-colors">Start Request</button>
             </div>
@@ -149,7 +149,7 @@ const CakesPage = () => {
 
           {/* Product Grid - Spacious & Organized */}
           <main className="lg:col-span-9">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-6 bg-white/40 p-6 rounded-3xl backdrop-blur-sm border border-white/20 shadow-sm">
+            <div className="mb-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/20 bg-white/40 p-4 shadow-sm backdrop-blur-sm sm:flex-row md:mb-12 md:gap-6 md:p-6">
               <span className="text-xs font-black text-bakery-chocolate/40 uppercase tracking-widest">
                 Showing {Math.min(visibleCount, sortedCakes.length)} of {sortedCakes.length} creations
               </span>
@@ -163,7 +163,7 @@ const CakesPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10"
+                className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:gap-8"
               >
                 {sortedCakes.slice(0, visibleCount).map((cake) => (
                   <Card key={cake.orderID} orderID={cake.orderID} />
@@ -175,19 +175,19 @@ const CakesPage = () => {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-32 bg-white rounded-[40px] shadow-premium border border-dashed border-bakery-pink/50"
+                className="rounded-3xl border border-dashed border-bakery-pink/50 bg-white py-20 text-center shadow-premium md:py-32"
               >
                 <div className="text-bakery-pink text-6xl mb-6">🍰</div>
-                <p className="text-bakery-chocolate/40 font-serif text-2xl italic">No cakes found in this category.</p>
+                <p className="text-xl font-serif italic text-bakery-chocolate/40 md:text-2xl">No cakes found in this category.</p>
                 <button onClick={() => setActiveCategory("All Products")} className="mt-8 text-bakery-rose font-black text-xs uppercase tracking-widest hover:underline">Reset Selection</button>
               </motion.div>
             )}
 
             {sortedCakes.length > visibleCount && (
-              <div className="mt-20 text-center">
+              <div className="mt-12 text-center md:mt-20">
                 <button
                   onClick={handleToggleVisibility}
-                  className="btn-premium px-16 py-5 text-lg shadow-xl active:scale-95 transition-transform"
+                  className="btn-premium px-8 py-3 text-sm shadow-xl transition-transform active:scale-95 md:px-16 md:py-5 md:text-base"
                 >
                   Load More Masterpieces
                 </button>
@@ -195,7 +195,7 @@ const CakesPage = () => {
             )}
             
             {visibleCount >= sortedCakes.length && sortedCakes.length > 8 && (
-              <div className="mt-20 text-center">
+              <div className="mt-12 text-center md:mt-20">
                 <button
                   onClick={() => setVisibleCount(8)}
                   className="btn-outline px-12 py-4"

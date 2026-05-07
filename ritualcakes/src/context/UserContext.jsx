@@ -2,7 +2,7 @@ import React, { useContext, createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const UserContext = createContext();
-const ADMIN_EMAIL = "ritualcake2019@gmail.com";
+const ADMIN_EMAIL = "ritualcakes2019@gmail.com";
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null); // store backend user directly
@@ -64,7 +64,7 @@ export const UserProvider = ({ children }) => {
   const isAdmin = () => {
     const userEmail = user?.email?.toLowerCase();
 
-    return userEmail === ADMIN_EMAIL;
+    return userEmail === ADMIN_EMAIL && user?.role === "admin";
   };
 
   return (

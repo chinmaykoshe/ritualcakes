@@ -5,7 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const cakes = Object.values(elements).flat();
-const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
+const ADMIN_EMAIL = 'ritualcakes2019@gmail.com';
 
 function Store() {
   const [selectedOptions, setSelectedOptions] = useState({});
