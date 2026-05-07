@@ -2,6 +2,7 @@ const UserModel = require("../Models/User");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const transporter = require('../Controllers/mailer'); 
+const { BRAND_EMAIL, formatDate, renderBrandedEmail } = require('./emailTemplates');
 const ADMIN_EMAIL = "ritualcake2019@gmail.com";
 
 const signup = async (req, res) => {
@@ -16,103 +17,43 @@ const signup = async (req, res) => {
         const userModel = new UserModel({ name, surname, email, password, address, mobile, dob, role });
         userModel.password = await bcrypt.hash(password, 10);
         await userModel.save();
-        const signupEmailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Signup Confirmation</title>
-            <style>
-                body {
-                    padding: 25px;
-                    font-family: Arial, sans-serif;
-                    background-color: rgb(255, 228, 208);
-                    color: rgb(44, 44, 44);
-                    line-height: 1.6;
-                }
-                h1, h3 {
-                    color: rgb(72, 37, 11);
-                }
-                p {
-                    margin: 10px 0;
-                }
-                table {
-                    border-collapse: collapse;
-                    width: 100%;
-                    margin: 20px 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-                th, td {
-                    padding: 12px;
-                    text-align: left;
-                    border: 1px solid rgb(77, 77, 77);
-                }
-                th {
-                    background-color: rgb(72, 37, 11);
-                    color: white;
-                }
-                strong {
-                    color: rgb(72, 37, 11);
-                }
-                footer {
-                    margin-top: 20px;
-                    font-size: 0.9em;
-                    color: rgb(77, 77, 77);
-                    text-align: center;
-                }
-                a {
-                    color: rgb(72, 37, 11);
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Welcome to RITUAL CAKES!</h1>
-            <p>Dear <strong>${userModel.name}</strong>,</p>
-            <p>Thank you for signing up at RITUAL CAKES. We are thrilled to have you on board!</p>
-            <h3>Your Details:</h3>
-            <table>
-                <tbody>
-                    <tr>
-                        <td><strong>Name:</strong></td>
-                        <td>${userModel.name} ${userModel.surname}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Email:</strong></td>
-                        <td>${userModel.email}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Address:</strong></td>
-                        <td>${userModel.address}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Mobile:</strong></td>
-                        <td>${userModel.mobile}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Date of Birth:</strong></td>
-                        <td>${new Date(userModel.dob).toDateString()}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>If you have any questions, feel free to <a href="mailto:support@ritualcakes.com">contact us</a>.</p>
-            <footer>
-                <p>Sincerely,<br>The RITUAL CAKES Team</p>
-                <p>&copy; ${new Date().getFullYear()} RITUAL CAKES. All rights reserved.</p>
-            </footer>
-        </body>
-        </html>
-        `;
+        const signupEmailHtml = renderBrandedEmail({
+            preview: "Your Ritual Cakes account is ready.",
+            eyebrow: "Welcome",
+            title: "Welcome to Ritual Cakes",
+            intro: `Hi ${userModel.name}, your account is ready. We are happy to be part of your celebrations.`,
+            body: "<p style=\"margin:0 0 12px;\">You can now save your details, place orders, and track your cake requests from your account.</p>",
+            details: [
+                ["Name", `${userModel.name} ${userModel.surname}`],
+                ["Email", userModel.email],
+                ["Mobile", userModel.mobile],
+                ["Date of Birth", formatDate(userModel.dob)],
+                ["Address", userModel.address],
+            ],
+        });
         const mailOptionsUser = {
-            from: 'ritualcakes2019@gmail.com',
+            from: BRAND_EMAIL,
             to: userModel.email,
-            subject: `Welcome to RITUAL CAKES`,
+            subject: `Welcome to Ritual Cakes`,
             html: signupEmailHtml,
         };
         const mailOptionsAdmin = {
-            from: 'ritualcakes2019@gmail.com',
-            to: 'ritualcakes2019@gmail.com',
-            subject: `New SIGN UP FROM ${userModel.email}`,
-            html: signupEmailHtml,
+            from: BRAND_EMAIL,
+            to: BRAND_EMAIL,
+            subject: `New signup: ${userModel.email}`,
+            html: renderBrandedEmail({
+                preview: "A new customer signed up on Ritual Cakes.",
+                eyebrow: "New signup",
+                title: "New Customer Account",
+                intro: `${userModel.name} ${userModel.surname} created a Ritual Cakes account.`,
+                details: [
+                    ["Name", `${userModel.name} ${userModel.surname}`],
+                    ["Email", userModel.email],
+                    ["Mobile", userModel.mobile],
+                    ["Date of Birth", formatDate(userModel.dob)],
+                    ["Address", userModel.address],
+                ],
+            }),
         };
         try {
             await transporter.sendMail(mailOptionsUser);

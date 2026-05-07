@@ -6,6 +6,7 @@ console.log("DEBUG: orderRoutes.js loaded");
 const UserModel = require('../Models/User');
 const ensureAuthenticated = require('./Middlewares/auth'); 
 const transporter = require('../Controllers/mailer'); 
+const { BRAND_EMAIL, formatCurrency, formatDate, renderBrandedEmail } = require('../Controllers/emailTemplates');
 const getUserOrders = async (req, res, next) => {
   try {
     const { userEmail } = req.params;
@@ -168,17 +169,35 @@ router.post('/orders', ensureAuthenticated, async (req, res) => {
         </footer>
       </body>
     </html>`;
+    const brandedOrderEmail = renderBrandedEmail({
+      preview: `Your Ritual Cakes order ${newOrder._id} is being prepared.`,
+      eyebrow: "Order received",
+      title: "Thank You for Your Order",
+      intro: `Hi ${user.name}, your order has been received and is being processed with care.`,
+      details: [
+        ["Order ID", newOrder._id],
+        ["Name", userName],
+        ["Email", userEmailNormalized],
+        ["Order Date", formatDate(orderDate)],
+        ["Payment Method", paymentMethod],
+        ["Delivery Address", deliveryAddress],
+        ["Cake Message", cakeMessage || "No message added"],
+        ["Total", formatCurrency(totalAmount)],
+      ],
+      items: orderItems,
+      footerNote: "We will keep you updated as your celebration order moves ahead.",
+    });
     const mailOptionsUser = {
-      from: 'ritualcakes2019@gmail.com',
+      from: BRAND_EMAIL,
       to: userEmail,
       subject: `Order Confirmation: ${newOrder._id}`,
-      html: orderDetailsHtml,
+      html: brandedOrderEmail,
     };
     const mailOptionsAdmin = {
-      from: 'ritualcakes2019@gmail.com',
-      to: 'ritualcakes2019@gmail.com',
-      subject: `New Order Placed by ${user.name} ${user.surname} with order id ${newOrder._id}`,
-      html: orderDetailsHtml,
+      from: BRAND_EMAIL,
+      to: BRAND_EMAIL,
+      subject: `New order: ${newOrder._id} from ${user.name} ${user.surname}`,
+      html: brandedOrderEmail,
     };
     await transporter.sendMail(mailOptionsUser);
     await transporter.sendMail(mailOptionsAdmin);
@@ -336,11 +355,28 @@ router.put('/orders/:orderId/status', ensureAuthenticated, async (req, res) => {
         </footer>
       </body>
     </html>`;
+    const brandedStatusEmail = renderBrandedEmail({
+      preview: `Your Ritual Cakes order ${updatedOrder._id} is now ${status}.`,
+      eyebrow: "Order update",
+      title: "Order Status Updated",
+      intro: `Your order status has been updated to ${status}.`,
+      details: [
+        ["Order ID", updatedOrder._id],
+        ["Status", status],
+        ["Order Date", formatDate(updatedOrder.orderDate)],
+        ["Payment Method", updatedOrder.paymentMethod],
+        ["Delivery Address", updatedOrder.deliveryAddress],
+        ["Cake Message", updatedOrder.cakeMessage || "No message added"],
+        ["Total", formatCurrency(updatedOrder.totalAmount)],
+      ],
+      items: updatedOrder.orderItems,
+      footerNote: "Thank you for letting Ritual Cakes be part of your celebration.",
+    });
     const mailOptionsUser = {
-      from: 'ritualcakes2019@gmail.com', 
+      from: BRAND_EMAIL, 
       to: userEmail, 
-      subject: `ORDER WAS ${status} FOR ${updatedOrder._id}`, 
-      html: orderDetailsHtml, 
+      subject: `Order ${updatedOrder._id} is ${status}`, 
+      html: brandedStatusEmail, 
     };
     try {
       await transporter.sendMail(mailOptionsUser);

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Customization = require('../Models/Customizationdb');
 const moment = require('moment');
 const transporter = require('../Controllers/mailer');
+const { BRAND_EMAIL, formatCurrency, formatDate, renderBrandedEmail } = require('../Controllers/emailTemplates');
 
 const multer = require('multer');
 const supabase = require('../supabase');
@@ -169,17 +170,37 @@ router.post('/customizations', upload.single('image'), async (req, res) => {
         </footer>
       </body>
     </html>`;
+    const brandedCustomizationEmail = renderBrandedEmail({
+      preview: `Your custom cake request ${customization._id} has been received.`,
+      eyebrow: "Custom order",
+      title: "Customization Request Received",
+      intro: `Hi ${customization.name}, your custom cake request has been received and is waiting for review.`,
+      details: [
+        ["Request ID", customization._id],
+        ["Name", customization.name],
+        ["Email", customization.email],
+        ["Phone", customization.phone],
+        ["Cake Type", customization.cakeType],
+        ["Flavor", customization.flavor],
+        ["Size", customization.size],
+        ["Delivery Date", formatDate(customization.deliveryDate)],
+        ["Message", customization.message || "No message added"],
+        ["Special Instructions", customization.specialInstructions || "None"],
+        ["Address", customization.address],
+      ],
+      footerNote: "We will review your request and update you with approval and pricing details soon.",
+    });
     const mailOptionsUser = {
-      from: 'ritualcakes2019@gmail.com',
+      from: BRAND_EMAIL,
       to: customization.email,
-      subject: `Order Confirmation: ${customization._id}`,
-      html: customizationDetailsHtml,
+      subject: `Customization request received: ${customization._id}`,
+      html: brandedCustomizationEmail,
     };
     const mailOptionsAdmin = {
-      from: 'ritualcakes2019@gmail.com',
-      to: 'ritualcakes2019@gmail.com',
-      subject: `New Order: ${customization._id}`,
-      html: customizationDetailsHtml,
+      from: BRAND_EMAIL,
+      to: BRAND_EMAIL,
+      subject: `New customization request: ${customization._id}`,
+      html: brandedCustomizationEmail,
     };
     try {
         await transporter.sendMail(mailOptionsUser);
@@ -349,11 +370,29 @@ router.put('/customizations/:id', async (req, res) => {
         </footer>
       </body>
     </html>`;
+    const brandedCustomizationStatusEmail = renderBrandedEmail({
+      preview: `Your custom cake request ${updatedCustomization._id} is now ${approvalStatus}.`,
+      eyebrow: "Custom order update",
+      title: "Customization Status Updated",
+      intro: `Your custom cake request has been updated to ${approvalStatus}.`,
+      details: [
+        ["Request ID", updatedCustomization._id],
+        ["Status", approvalStatus],
+        ["Cake Type", updatedCustomization.cakeType],
+        ["Flavor", updatedCustomization.flavor],
+        ["Size", updatedCustomization.size],
+        ["Delivery Date", formatDate(updatedCustomization.deliveryDate)],
+        ["Price", formatCurrency(updatedCustomization.price)],
+        ["Special Instructions", updatedCustomization.specialInstructions || "None"],
+        ["Address", updatedCustomization.address],
+      ],
+      footerNote: "If anything needs to be adjusted, reply to this email and we will help.",
+    });
     const mailOptionsUser = {
-      from: 'ritualcakes2019@gmail.com',
+      from: BRAND_EMAIL,
       to: email,
-      subject: `Customization Status Updated as ${approvalStatus} for ${updatedCustomization._id}`,
-      html: orderDetailsHtml,
+      subject: `Customization ${updatedCustomization._id} is ${approvalStatus}`,
+      html: brandedCustomizationStatusEmail,
     };
     try {
       await transporter.sendMail(mailOptionsUser);
