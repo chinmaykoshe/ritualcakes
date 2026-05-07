@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const ensureAuthenticated = require('./Middlewares/auth');
 const ADMIN_EMAIL = 'ritualcake2019@gmail.com';
 
+const isAdminUser = (user) => user?.email?.toLowerCase() === ADMIN_EMAIL;
+
 router.get('/user', ensureAuthenticated, async (req, res) => {
   try {
     const user = await UserModel.findById(req.user._id); 
@@ -16,7 +18,7 @@ router.get('/user', ensureAuthenticated, async (req, res) => {
         name: user.name,
         surname: user.surname,
         email: user.email,
-        role: user.email === ADMIN_EMAIL ? 'admin' : user.role,
+        role: isAdminUser(user) ? 'admin' : user.role,
         mobile: user.mobile,
         dob: user.dob,
         address: user.address,
@@ -57,6 +59,21 @@ router.put('/user', ensureAuthenticated, async (req, res) => {
   } catch (error) {
     console.error('Error updating user data:', error);
     res.status(500).json({ message: 'Error updating user data', success: false });
+  }
+});
+
+router.get('/admin/authorize', ensureAuthenticated, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id);
+
+    if (!isAdminUser(user)) {
+      return res.status(403).json({ authorized: false, message: 'Admin access denied' });
+    }
+
+    res.json({ authorized: true });
+  } catch (error) {
+    console.error('Error authorizing admin:', error);
+    res.status(500).json({ authorized: false, message: 'Error authorizing admin' });
   }
 });
 
