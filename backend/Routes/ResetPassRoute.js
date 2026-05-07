@@ -6,7 +6,7 @@ const User = require("../Models/User");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 const RESET_TOKEN_EXPIRATION = "1h";
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://ritualcakes.vercel.app';
 
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;

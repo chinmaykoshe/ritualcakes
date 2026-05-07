@@ -23,7 +23,8 @@ const app = express();
 const allowedOrigins = [
     "https://ritualcakes.vercel.app",
     "https://ritualcakes-stg-92alpha.vercel.app",
-];
+    process.env.FRONTEND_URL,
+].filter(Boolean);
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
