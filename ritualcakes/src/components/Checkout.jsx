@@ -109,10 +109,10 @@ function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-32">
       <div className="container mx-auto px-8 lg:px-16 xl:px-24 max-w-7xl">
         <header className="mb-16 space-y-6">
-          <button onClick={() => navigate(-1)} className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-rose transition-colors font-black uppercase tracking-widest text-xs">
+          <button onClick={() => navigate(-1)} className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-pista-deep transition-colors font-black uppercase tracking-widest text-xs">
             <FaArrowLeft /> <span>Back to Cart</span>
           </button>
           <h1 className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate">Finalize <span className="text-bakery-rose italic font-medium">Ritual</span></h1>
@@ -125,8 +125,8 @@ function Checkout() {
               
               {/* Delivery Info */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
-                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaMapMarkerAlt /></div>
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
+                  <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-xl flex items-center justify-center shadow-lg"><FaMapMarkerAlt /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Delivery Details</h2>
                 </div>
                 
@@ -134,7 +134,7 @@ function Checkout() {
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Recipient Name</label>
                     <div className="relative group">
-                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-pista-deep transition-colors" />
                       <input
                         type="text"
                         value={customerName}
@@ -149,7 +149,7 @@ function Checkout() {
                   <div className="space-y-2 md:col-span-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Full Delivery Address</label>
                     <div className="relative group">
-                      <FaMapMarkerAlt className="absolute left-4 top-4 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <FaMapMarkerAlt className="absolute left-4 top-4 text-bakery-chocolate/20 group-focus-within:text-bakery-pista-deep transition-colors" />
                       <textarea
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -164,7 +164,7 @@ function Checkout() {
 
               {/* Cake Details */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
                   <div className="w-10 h-10 bg-bakery-chocolate text-white rounded-xl flex items-center justify-center shadow-lg"><FaStickyNote /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Ritual Preferences</h2>
                 </div>
@@ -214,18 +214,18 @@ function Checkout() {
 
               {/* Payment Method */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
-                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaCreditCard /></div>
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
+                  <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-xl flex items-center justify-center shadow-lg"><FaCreditCard /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Payment Method</h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <button 
                     onClick={() => setPaymentMethod("COD")}
-                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'COD' ? 'border-bakery-rose bg-bakery-rose/5 shadow-inner' : 'border-bakery-pink/20 hover:border-bakery-rose/30'}`}
+                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'COD' ? 'border-bakery-pista-deep bg-bakery-pista-light/60 shadow-inner' : 'border-bakery-pista/40 hover:border-bakery-pista-mid/50'}`}
                   >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'COD' ? 'border-bakery-rose' : 'border-bakery-pink'}`}>
-                      {paymentMethod === 'COD' && <div className="w-3 h-3 bg-bakery-rose rounded-full" />}
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'COD' ? 'border-bakery-pista-deep' : 'border-bakery-pista/40'}`}>
+                      {paymentMethod === 'COD' && <div className="w-3 h-3 bg-bakery-pista-deep rounded-full" />}
                     </div>
                     <div className="text-left">
                       <p className="font-black text-bakery-chocolate uppercase text-xs tracking-widest">Pay on Delivery</p>
@@ -235,10 +235,10 @@ function Checkout() {
 
                   <button 
                     onClick={() => setPaymentMethod("Online")}
-                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'Online' ? 'border-bakery-rose bg-bakery-rose/5 shadow-inner' : 'border-bakery-pink/20 hover:border-bakery-rose/30'}`}
+                    className={`p-6 rounded-3xl border-2 flex items-center space-x-4 transition-all ${paymentMethod === 'Online' ? 'border-bakery-pista-deep bg-bakery-pista-light/60 shadow-inner' : 'border-bakery-pista/40 hover:border-bakery-pista-mid/50'}`}
                   >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'Online' ? 'border-bakery-rose' : 'border-bakery-pink'}`}>
-                      {paymentMethod === 'Online' && <div className="w-3 h-3 bg-bakery-rose rounded-full" />}
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'Online' ? 'border-bakery-pista-deep' : 'border-bakery-pista/40'}`}>
+                      {paymentMethod === 'Online' && <div className="w-3 h-3 bg-bakery-pista-deep rounded-full" />}
                     </div>
                     <div className="text-left">
                       <p className="font-black text-bakery-chocolate uppercase text-xs tracking-widest">Online Payment</p>
@@ -268,7 +268,7 @@ function Checkout() {
           {/* Order Summary Sidebar */}
           <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
             <div className="card-premium p-8 bg-white space-y-8 border-2 border-bakery-rose/10 shadow-2xl">
-              <h2 className="text-2xl font-serif font-black text-bakery-chocolate border-b border-bakery-pink pb-4">Order Summary</h2>
+              <h2 className="text-2xl font-serif font-black text-bakery-chocolate border-b border-bakery-pista/30 pb-4">Order Summary</h2>
               
               <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {cart.map((item) => (
@@ -283,7 +283,7 @@ function Checkout() {
                 ))}
               </div>
 
-              <div className="pt-6 border-t border-bakery-pink/30 space-y-4">
+              <div className="pt-6 border-t border-bakery-pista/30 space-y-4">
                 <div className="flex justify-between text-bakery-chocolate/50 font-bold text-xs uppercase tracking-widest">
                   <span>Subtotal</span>
                   <span>₹{calculateTotal().toFixed(0)}</span>

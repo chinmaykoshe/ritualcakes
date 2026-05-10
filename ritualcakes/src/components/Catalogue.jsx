@@ -27,14 +27,14 @@ const Catalogue = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-20">
       <div className="container mx-auto px-8 lg:px-16 xl:px-24">
         {/* Header */}
         <header className="text-center mb-16 space-y-4">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-6 py-2 bg-bakery-rose/10 text-bakery-rose rounded-full font-black text-xs uppercase tracking-[0.2em]"
+            className="inline-block px-6 py-2 bg-bakery-pista-light/60 text-bakery-pista-deep rounded-full font-black text-xs uppercase tracking-[0.2em] border border-bakery-pista/20"
           >
             Digital Catalogue
           </motion.div>
@@ -44,7 +44,7 @@ const Catalogue = () => {
             transition={{ delay: 0.1 }}
             className="text-5xl lg:text-7xl font-serif font-black text-bakery-chocolate leading-tight"
           >
-            Our Complete <span className="text-bakery-rose italic font-medium">Menu</span>
+            Our Complete <span className="text-bakery-pista-deep italic font-medium">Menu</span>
           </motion.h1>
           <p className="text-lg text-bakery-chocolate/50 max-w-2xl mx-auto font-medium">
             Explore our extensive range of ritual cakes and treats. A comprehensive guide to all our sweet creations.
@@ -56,7 +56,7 @@ const Catalogue = () => {
           <aside className="lg:col-span-3 lg:sticky lg:top-32 space-y-8 order-2 lg:order-1">
             <div className="card-premium p-8 bg-white space-y-6">
               <div className="flex items-center space-x-3 text-bakery-chocolate">
-                <FaBookOpen className="text-bakery-rose" />
+                <FaBookOpen className="text-bakery-pista-deep" />
                 <h3 className="text-xl font-serif font-black uppercase tracking-tight">Index</h3>
               </div>
               
@@ -67,8 +67,8 @@ const Catalogue = () => {
                     onClick={() => scrollToSection(category)}
                     className={`w-full text-left px-5 py-3 rounded-xl transition-all text-sm font-bold border-2 ${
                       activeCategory === category
-                        ? "bg-bakery-chocolate border-bakery-chocolate text-white shadow-lg translate-x-2"
-                        : "bg-white border-transparent text-bakery-chocolate/40 hover:bg-bakery-cream hover:text-bakery-chocolate"
+                        ? 'border-bakery-pista-deep bg-bakery-pista-deep text-white shadow-lg' 
+                        : 'border-bakery-pista/40 hover:border-bakery-pista-mid/50 text-bakery-chocolate hover:bg-bakery-pista-light'
                     }`}
                   >
                     {category.replace(/([A-Z])/g, ' $1')}
@@ -77,9 +77,9 @@ const Catalogue = () => {
               </div>
             </div>
 
-            <div className="card-premium p-8 bg-bakery-rose text-white text-center space-y-4">
+            <div className="card-premium p-8 bg-bakery-pista-deep text-white text-center space-y-4">
               <p className="text-xs font-black uppercase tracking-widest opacity-80">Can't decide?</p>
-              <button onClick={() => navigate('/cakes')} className="w-full py-3 bg-white text-bakery-rose rounded-xl font-black text-xs uppercase tracking-widest hover:bg-bakery-cream transition-colors">Visual Gallery</button>
+              <button onClick={() => navigate('/cakes')} className="w-full py-3 bg-white text-bakery-pista-deep rounded-xl font-black text-xs uppercase tracking-widest hover:bg-bakery-pista-light transition-colors">Visual Gallery</button>
             </div>
           </aside>
 
@@ -91,8 +91,8 @@ const Catalogue = () => {
                   <h2 className="text-4xl font-serif font-black text-bakery-chocolate">
                     {category.replace(/([A-Z])/g, ' $1')}
                   </h2>
-                  <div className="h-px flex-1 bg-bakery-pink/30" />
-                  <span className="text-xs font-black text-bakery-rose uppercase tracking-widest">{elements[category].length} Items</span>
+                  <div className="flex space-x-12 border-b border-bakery-pista/30 mb-12" />
+                  <span className="text-xs font-black text-bakery-pista-deep uppercase tracking-widest">{elements[category].length} Items</span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
@@ -101,14 +101,14 @@ const Catalogue = () => {
                       key={item.orderID}
                       whileHover={{ scale: 1.01, x: 10 }}
                       onClick={() => navigate(`/product/${item.orderID}`)}
-                      className="group p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-bakery-rose/20 cursor-pointer flex flex-col md:flex-row justify-between items-center gap-8"
+                      className="group p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all border border-transparent hover:border-bakery-pista-mid/30 cursor-pointer flex flex-col md:flex-row justify-between items-center gap-8"
                     >
                       <div className="flex items-center space-x-8 flex-1">
                         <div className="w-20 h-20 bg-bakery-cream rounded-2xl overflow-hidden shrink-0 shadow-sm">
                           <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                         </div>
                         <div className="space-y-2">
-                          <h3 className="text-xl font-serif font-black text-bakery-chocolate group-hover:text-bakery-rose transition-colors">{item.name}</h3>
+                          <h3 className="text-xl font-serif font-black text-bakery-chocolate group-hover:text-bakery-pista-deep transition-colors">{item.name}</h3>
                           <p className="text-sm text-bakery-chocolate/40 font-medium line-clamp-1">{item.description || "Artisanal ritual creation."}</p>
                         </div>
                       </div>
@@ -122,7 +122,7 @@ const Catalogue = () => {
                             <p className="text-sm font-bold text-bakery-rose opacity-60">₹{item.prices["1kg"]} <span className="text-[10px] uppercase tracking-widest">/ 1kg</span></p>
                           )}
                         </div>
-                        <div className="w-10 h-10 bg-bakery-cream rounded-full flex items-center justify-center text-bakery-rose group-hover:bg-bakery-rose group-hover:text-white transition-all shadow-inner">
+                        <div className="w-10 h-10 bg-bakery-pista-light rounded-full flex items-center justify-center text-bakery-pista-deep group-hover:bg-bakery-pista-deep group-hover:text-white transition-all shadow-inner">
                           <FaChevronRight size={12} />
                         </div>
                       </div>

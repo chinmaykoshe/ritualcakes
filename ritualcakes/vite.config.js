@@ -8,12 +8,12 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/auth': {
-        target: 'http://localhost:3000',
+        target: 'https://ritualcakes-stg-92alpha.vercel.app',
         changeOrigin: true,
         secure: false,
       },
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://ritualcakes-stg-92alpha.vercel.app',
         changeOrigin: true,
         secure: false,
       },

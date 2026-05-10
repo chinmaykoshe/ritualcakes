@@ -24,7 +24,7 @@ export const CustomizationProvider = ({ children }) => {
   const [success, setSuccess] = useState('');
   const [customizations, setCustomizations] = useState([]); 
   const yourToken = localStorage.getItem('token'); 
-  const apiUrl = 'https://ritualcakes-stg-92alpha.vercel.app/api'
+  const apiUrl = '/api'
   const fetchCustomizations = async () => {
     setLoading(true);
     setError('');

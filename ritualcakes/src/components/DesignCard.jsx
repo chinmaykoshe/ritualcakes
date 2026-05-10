@@ -5,7 +5,7 @@ import { FaExpandAlt } from "react-icons/fa";
 
 const DesignCard = ({ designnames, designKey }) => {
   if (!designnames || !designnames[designKey]) {
-    return <div className="text-center text-bakery-rose/40 py-8 bg-bakery-cream rounded-3xl">Design Loading...</div>;
+    return <div className="text-center text-bakery-pista-deep/40 py-8 bg-bakery-pista-light/30 rounded-3xl">Design Loading...</div>;
   }
   
   const designImage = designnames[designKey];
@@ -24,7 +24,7 @@ const DesignCard = ({ designnames, designKey }) => {
   return (
     <motion.div
       whileHover={{ y: -6 }}
-      className="group relative bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-premium transition-all duration-500 cursor-pointer border border-bakery-pink/10"
+      className="group relative bg-white rounded-[32px] overflow-hidden shadow-sm hover:shadow-premium transition-all duration-500 cursor-pointer border border-bakery-pista/20"
       onClick={handleCardClick}
     >
       {/* Image Container */}
@@ -39,7 +39,7 @@ const DesignCard = ({ designnames, designKey }) => {
         <div className="absolute inset-0 bg-bakery-chocolate/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         {/* Zoom Icon */}
-        <div className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-xl flex items-center justify-center text-bakery-rose opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+        <div className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-xl flex items-center justify-center text-bakery-pista-deep opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <FaExpandAlt size={14} />
         </div>
       </div>
@@ -47,7 +47,7 @@ const DesignCard = ({ designnames, designKey }) => {
       {/* Content */}
       <div className="p-5">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-black text-bakery-chocolate/60 group-hover:text-bakery-rose transition-colors duration-300 truncate pr-2">
+          <h3 className="text-sm font-black text-bakery-chocolate/60 group-hover:text-bakery-pista-deep transition-colors duration-300 truncate pr-2">
             {displayName}
           </h3>
           <div className="w-1.5 h-1.5 bg-bakery-pink rounded-full group-hover:bg-bakery-rose transition-colors shrink-0" />

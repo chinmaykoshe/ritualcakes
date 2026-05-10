@@ -14,8 +14,8 @@ const FullThemeSection = ({ title, categoryPrefix, designnames }) => {
     <section className="space-y-12">
       <div className="flex items-center space-x-6">
         <h2 className="text-4xl font-serif font-black text-bakery-chocolate">{title}</h2>
-        <div className="h-px flex-1 bg-bakery-pink/30" />
-        <span className="text-xs font-black text-bakery-rose uppercase tracking-widest">{filteredDesignKeys.length} Masterpieces</span>
+        <div className="h-px flex-1 bg-bakery-pista/40" />
+        <span className="text-xs font-black text-bakery-pista-deep uppercase tracking-widest">{filteredDesignKeys.length} Masterpieces</span>
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
@@ -39,12 +39,12 @@ const FullThemeSection = ({ title, categoryPrefix, designnames }) => {
 
 function PageDesigns() {
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-32">
       <div className="container mx-auto px-8 lg:px-16 xl:px-24">
         <header className="mb-16 space-y-6">
           <Link
             to="/designs"
-            className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-rose transition-colors font-black uppercase tracking-widest text-xs"
+            className="inline-flex items-center space-x-2 text-bakery-chocolate/40 hover:text-bakery-pista-deep transition-colors font-black uppercase tracking-widest text-xs"
           >
             <FaArrowLeft /> <span>Back to Inspiration</span>
           </Link>

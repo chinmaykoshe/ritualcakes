@@ -19,10 +19,10 @@ function Footer() {
               Crafting sweet moments with love and precision. Every cake is a ritual of taste and artistry, baked fresh just for you.
             </p>
             <div className="flex space-x-4">
-              <a href="https://facebook.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-rose transition-colors">
+              <a href="https://facebook.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-pista-deep transition-colors">
                 <FaFacebook />
               </a>
-              <a href="https://instagram.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-rose transition-colors">
+              <a href="https://instagram.com" className="w-10 h-10 rounded-full bg-bakery-cream/10 flex items-center justify-center hover:bg-bakery-pista-deep transition-colors">
                 <FaInstagram />
               </a>
             </div>
@@ -34,7 +34,7 @@ function Footer() {
             <ul className="space-y-4">
               {['Home', 'Designs', 'Cakes', 'Catalogue', 'About Us', 'Contact'].map((link) => (
                 <li key={link}>
-                  <Link to={`/${link.toLowerCase().replace(' ', '')}`} className="text-bakery-cream/70 hover:text-bakery-rose transition-colors">
+                  <Link to={`/${link.toLowerCase().replace(' ', '')}`} className="text-bakery-cream/70 hover:text-bakery-pista-mid transition-colors">
                     {link}
                   </Link>
                 </li>
@@ -52,11 +52,11 @@ function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <FaPhone className="text-bakery-rose" />
-                <a href="tel:+918169296802" className="hover:text-bakery-rose">+91 8169296802</a>
+                <a href="tel:+918169296802" className="hover:text-bakery-pista-mid">+91 8169296802</a>
               </li>
               <li className="flex items-center space-x-3">
                 <FaEnvelope className="text-bakery-rose" />
-                <a href="mailto:ritualcakes2019@gmail.com" className="hover:text-bakery-rose">ritualcakes2019@gmail.com</a>
+                <a href="mailto:ritualcakes2019@gmail.com" className="hover:text-bakery-pista-mid">ritualcakes2019@gmail.com</a>
               </li>
             </ul>
           </div>
@@ -83,8 +83,8 @@ function Footer() {
         <div className="mt-20 pt-8 border-t border-bakery-cream/10 flex flex-col md:flex-row justify-between items-center text-sm text-bakery-cream/50">
           <p>&copy; 2024 Ritual Cakes. All Rights Reserved. Designed and developed by Chinmay Koshe.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/company-info" className="hover:text-bakery-rose">Privacy Policy</Link>
-            <Link to="/company-info" className="hover:text-bakery-rose">Terms of Service</Link>
+            <Link to="/company-info" className="hover:text-bakery-pista-mid">Privacy Policy</Link>
+            <Link to="/company-info" className="hover:text-bakery-pista-mid">Terms of Service</Link>
           </div>
         </div>
       </div>
@@ -93,4 +93,3 @@ function Footer() {
 }
 
 export default Footer;
-

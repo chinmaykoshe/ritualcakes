@@ -5,7 +5,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const apiUrl = "https://ritualcakes-stg-92alpha.vercel.app/api";
+  const apiUrl = "/api"; // Axios base URL is empty, so we use /api explicitly
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");

@@ -3,6 +3,7 @@ import { elements } from "../assets/assets";
 import Card from "./Card"; 
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFilter, FaSortAmountDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const categoryMapping = {
   "All Products": "all",
@@ -18,6 +19,7 @@ const categoryMapping = {
 };
 
 const CakesPage = () => {
+  const navigate = useNavigate();
   const categories = Object.keys(categoryMapping);
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const [sortOrder, setSortOrder] = useState("recommended");
@@ -60,14 +62,14 @@ const CakesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-6 pb-20 md:pt-10 md:pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-6 pb-20 md:pt-10 md:pb-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Header Section - Airy & Centered */}
         <header className="mb-10 space-y-4 text-center md:mb-16 md:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block rounded-full bg-bakery-rose/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-bakery-rose md:px-5 md:text-xs"
+            className="inline-block rounded-full bg-bakery-pista-light/60 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-bakery-pista-deep md:px-5 md:text-xs border border-bakery-pista/20"
           >
             The Collection
           </motion.div>
@@ -94,7 +96,7 @@ const CakesPage = () => {
           <aside className="space-y-8 lg:col-span-3 lg:space-y-12">
             <div className="space-y-5 md:space-y-8">
               <div className="flex items-center space-x-3 text-bakery-chocolate">
-                <FaFilter className="text-bakery-rose" />
+                <FaFilter className="text-bakery-pista-deep" />
                 <h3 className="text-base font-serif font-black uppercase tracking-tight md:text-xl">Categories</h3>
               </div>
               <div className="flex flex-wrap lg:flex-col gap-3">
@@ -108,7 +110,7 @@ const CakesPage = () => {
                     className={`rounded-xl border-2 px-4 py-2.5 text-left text-xs font-bold transition-all md:rounded-2xl md:px-6 md:py-3 md:text-sm ${
                       activeCategory === category
                         ? "bg-bakery-chocolate border-bakery-chocolate text-white shadow-xl lg:translate-x-2"
-                        : "bg-white border-bakery-pink/20 text-bakery-chocolate/60 hover:border-bakery-rose/30 hover:text-bakery-chocolate"
+                        : "bg-white border-bakery-pista/20 text-bakery-chocolate/60 hover:border-bakery-pista-mid/40 hover:text-bakery-chocolate"
                     }`}
                   >
                     {category}
@@ -119,7 +121,7 @@ const CakesPage = () => {
 
             <div className="space-y-5 md:space-y-6">
               <div className="flex items-center space-x-3 text-bakery-chocolate">
-                <FaSortAmountDown className="text-bakery-rose" />
+                <FaSortAmountDown className="text-bakery-pista-deep" />
                 <h3 className="text-base font-serif font-black uppercase tracking-tight md:text-xl">Sort By</h3>
               </div>
               <div className="relative group">
@@ -127,7 +129,7 @@ const CakesPage = () => {
                   id="sortOrder"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
-                  className="w-full cursor-pointer appearance-none rounded-xl border-2 border-bakery-pink/20 bg-white px-4 py-3 text-xs font-bold shadow-sm transition-colors focus:border-bakery-rose/50 focus:outline-none md:rounded-2xl md:px-6 md:py-4 md:text-sm"
+                  className="w-full cursor-pointer appearance-none rounded-xl border-2 border-bakery-pista/20 bg-white px-4 py-3 text-xs font-bold shadow-sm transition-colors focus:border-bakery-pista-mid/50 focus:outline-none md:rounded-2xl md:px-6 md:py-4 md:text-sm"
                 >
                   <option value="recommended">Recommended</option>
                   <option value="lowToHigh">Price: Low to High</option>
@@ -140,10 +142,15 @@ const CakesPage = () => {
             </div>
             
             {/* Sidebar Promo */}
-            <div className="card-premium p-5 bg-bakery-rose text-white space-y-4 md:p-8">
+            <div className="card-premium p-5 bg-bakery-pista-deep text-white space-y-4 md:p-8">
               <h4 className="font-serif font-black text-lg md:text-xl">Special Event?</h4>
               <p className="text-xs font-medium opacity-80 leading-relaxed">Let's create something unique. Our custom order requests are currently open.</p>
-              <button className="w-full py-3 bg-white text-bakery-rose rounded-xl font-black text-xs uppercase tracking-widest hover:bg-bakery-cream transition-colors">Start Request</button>
+              <button 
+                onClick={() => navigate('/customization')}
+                className="w-full py-3 bg-white text-bakery-pista-deep rounded-xl font-black text-xs uppercase tracking-widest hover:bg-bakery-pista-light transition-colors"
+              >
+                Start Request
+              </button>
             </div>
           </aside>
 
@@ -153,7 +160,7 @@ const CakesPage = () => {
               <span className="text-xs font-black text-bakery-chocolate/40 uppercase tracking-widest">
                 Showing {Math.min(visibleCount, sortedCakes.length)} of {sortedCakes.length} creations
               </span>
-              <div className="h-1 w-24 bg-bakery-pink/30 rounded-full hidden sm:block" />
+              <div className="h-1 w-24 bg-bakery-pista/40 rounded-full hidden sm:block" />
             </div>
 
             <AnimatePresence mode="wait">
@@ -163,7 +170,7 @@ const CakesPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:gap-8"
+                className="grid grid-cols-2 gap-4 lg:grid-cols-4 xl:gap-8"
               >
                 {sortedCakes.slice(0, visibleCount).map((cake) => (
                   <Card key={cake.orderID} orderID={cake.orderID} />
@@ -175,11 +182,11 @@ const CakesPage = () => {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="rounded-3xl border border-dashed border-bakery-pink/50 bg-white py-20 text-center shadow-premium md:py-32"
+                className="rounded-3xl border border-dashed border-bakery-pista/50 bg-white py-20 text-center shadow-premium md:py-32"
               >
-                <div className="text-bakery-pink text-6xl mb-6">🍰</div>
+                <div className="text-bakery-pista-mid text-6xl mb-6">🍰</div>
                 <p className="text-xl font-serif italic text-bakery-chocolate/40 md:text-2xl">No cakes found in this category.</p>
-                <button onClick={() => setActiveCategory("All Products")} className="mt-8 text-bakery-rose font-black text-xs uppercase tracking-widest hover:underline">Reset Selection</button>
+                <button onClick={() => setActiveCategory("All Products")} className="mt-8 text-bakery-pista-deep font-black text-xs uppercase tracking-widest hover:underline">Reset Selection</button>
               </motion.div>
             )}
 

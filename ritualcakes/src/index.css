@@ -7,7 +7,11 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans text-bakery-chocolate bg-bakery-cream antialiased selection:bg-bakery-rose selection:text-white;
+    @apply font-sans text-bakery-chocolate bg-bakery-cream antialiased;
+  }
+  ::selection {
+    background-color: #C8DFC4;
+    color: #48250B;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
@@ -30,8 +34,8 @@
            hover:shadow-premium-hover hover:-translate-y-2 overflow-hidden;
   }
   .input-premium {
-    @apply w-full px-4 py-3 bg-white border border-bakery-pink rounded-xl focus:outline-none 
-           focus:ring-2 focus:ring-bakery-rose focus:border-transparent transition-all duration-300;
+    @apply w-full px-4 py-3 bg-white border border-[#C8DFC4] rounded-xl focus:outline-none 
+           focus:ring-2 focus:ring-[#A8C8A3] focus:border-transparent transition-all duration-300;
   }
   .glass {
     @apply bg-white/70 backdrop-blur-md border border-white/20;
@@ -46,7 +50,7 @@
   @apply bg-bakery-cream;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-bakery-rose/50 rounded-full hover:bg-bakery-rose transition-colors;
+  @apply bg-[#C8DFC4] rounded-full hover:bg-[#A8C8A3] transition-colors;
 }
 
 @media print {

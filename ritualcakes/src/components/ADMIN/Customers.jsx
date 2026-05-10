@@ -8,7 +8,7 @@ function Customers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showActions, setShowActions] = useState(false); // Controls "Delete" visibility
   const token = localStorage.getItem('token');
-  const apiUrl = `https://ritualcakes-stg-92alpha.vercel.app/api/users`;
+  const apiUrl = `/users`; // Using relative path (axios base URL is /api)
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -37,7 +37,7 @@ function Customers() {
     };
 
     fetchCustomers();
-  }, [token]);
+  }, [token, apiUrl]);
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this customer?');
@@ -59,7 +59,6 @@ function Customers() {
     const search = searchQuery.toLowerCase();
     return (
       customer.name?.toLowerCase().includes(search) ||
-      customer.surname?.toLowerCase().includes(search) ||
       customer.email?.toLowerCase().includes(search) ||
       customer.mobile?.toLowerCase().includes(search) ||
       customer.address?.toLowerCase().includes(search)
@@ -97,7 +96,6 @@ function Customers() {
             <thead>
               <tr className="bg-neutral-100 text-neutral-700">
                 <th className="px-4 py-2 border border-solid">Name</th>
-                <th className="px-4 py-2 border border-solid">Surname</th>
                 <th className="px-4 py-2 border border-solid">Email</th>
                 <th className="px-4 py-2 border border-solid">Phone</th>
                 <th className="px-4 py-2 border border-solid">Address</th>
@@ -110,7 +108,7 @@ function Customers() {
             <tbody>
               {filteredCustomers.length === 0 ? (
                 <tr>
-                  <td colSpan={showActions ? 7 : 6} className="text-center py-4">
+                  <td colSpan={showActions ? 6 : 5} className="text-center py-4">
                     No customers found
                   </td>
                 </tr>
@@ -120,7 +118,6 @@ function Customers() {
                   .map((customer) => (
                     <tr key={customer._id}>
                       <td className="px-4 py-2 border border-solid">{customer.name}</td>
-                      <td className="px-4 py-2 border border-solid">{customer.surname}</td>
                       <td className="px-4 py-2 border border-solid">{customer.email}</td>
                       <td className="px-4 py-2 border border-solid">{customer.mobile}</td>
                       <td className="px-4 py-2 border border-solid">{customer.address}</td>
@@ -143,8 +140,6 @@ function Customers() {
                           >
                             Delete
                           </button>
-
-
                         </td>
                       )}
                     </tr>

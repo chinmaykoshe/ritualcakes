@@ -80,14 +80,14 @@ function CustomizationForm() {
   const isLoggedIn = localStorage.getItem("token");
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-32">
       <div className="container mx-auto px-8 lg:px-16 xl:px-32">
         {/* Header Section */}
         <header className="text-center mb-16 space-y-4">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-6 py-2 bg-bakery-rose/10 text-bakery-rose rounded-full font-black text-xs uppercase tracking-[0.2em]"
+            className="inline-block px-6 py-2 bg-bakery-pista-light/60 text-bakery-pista-deep rounded-full font-black text-xs uppercase tracking-[0.2em] border border-bakery-pista/20"
           >
             Bespoke Creations
           </motion.div>
@@ -113,8 +113,8 @@ function CustomizationForm() {
               
               {/* Section 1: Contact Information */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
-                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaUser /></div>
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
+                  <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-xl flex items-center justify-center shadow-lg"><FaUser /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Contact Information</h2>
                 </div>
                 
@@ -122,7 +122,7 @@ function CustomizationForm() {
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Full Name</label>
                     <div className="relative group">
-                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-pista-deep transition-colors" />
                       <input
                         type="text"
                         name="name"
@@ -143,7 +143,7 @@ function CustomizationForm() {
                       <input
                         type="email"
                         name="email"
-                        className="input-premium pl-12 bg-bakery-cream/30 opacity-60"
+                        className="input-premium pl-12 bg-bakery-pista-light/30 opacity-60"
                         value={formData.email}
                         onChange={handleChange}
                         required
@@ -155,7 +155,7 @@ function CustomizationForm() {
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Phone (WhatsApp Preferred)</label>
                     <div className="relative group">
-                      <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-bakery-chocolate/20 group-focus-within:text-bakery-pista-deep transition-colors" />
                       <input
                         type="tel"
                         name="phone"
@@ -172,7 +172,7 @@ function CustomizationForm() {
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-bakery-chocolate/40 ml-1">Delivery Address</label>
                     <div className="relative group">
-                      <FaMapMarkerAlt className="absolute left-4 top-4 text-bakery-chocolate/20 group-focus-within:text-bakery-rose transition-colors" />
+                      <FaMapMarkerAlt className="absolute left-4 top-4 text-bakery-chocolate/20 group-focus-within:text-bakery-pista-deep transition-colors" />
                       <textarea
                         name="address"
                         placeholder="Flat no, Building, Street..."
@@ -189,8 +189,8 @@ function CustomizationForm() {
 
               {/* Section 2: Cake Specifications */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
-                  <div className="w-10 h-10 bg-bakery-chocolate text-white rounded-xl flex items-center justify-center shadow-lg"><FaMagic /></div>
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
+                  <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-xl flex items-center justify-center shadow-lg"><FaMagic /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Cake Specifications</h2>
                 </div>
                 
@@ -259,8 +259,8 @@ function CustomizationForm() {
 
               {/* Section 3: Occasion & Style */}
               <div className="space-y-8">
-                <div className="flex items-center space-x-4 border-b border-bakery-pink pb-4">
-                  <div className="w-10 h-10 bg-bakery-rose text-white rounded-xl flex items-center justify-center shadow-lg"><FaPenNib /></div>
+                <div className="flex items-center space-x-4 border-b border-bakery-pista/30 pb-4">
+                  <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-xl flex items-center justify-center shadow-lg"><FaPenNib /></div>
                   <h2 className="text-2xl font-serif font-black text-bakery-chocolate">Occasion & Style</h2>
                 </div>
                 
@@ -317,7 +317,7 @@ function CustomizationForm() {
                       <label 
                         htmlFor="imageUpload"
                         className={`w-full flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-3xl cursor-pointer transition-all ${
-                          previewUrl ? 'border-bakery-rose bg-bakery-rose/5' : 'border-bakery-pink/50 hover:border-bakery-rose hover:bg-bakery-cream/30'
+                          previewUrl ? 'border-bakery-pista-deep bg-bakery-pista-light/40' : 'border-bakery-pista/40 hover:border-bakery-pista-mid hover:bg-bakery-pista-light/30'
                         }`}
                       >
                         {previewUrl ? (
@@ -329,7 +329,7 @@ function CustomizationForm() {
                           </div>
                         ) : (
                           <>
-                            <FaCloudUploadAlt className="text-5xl text-bakery-rose mb-4 animate-bounce" />
+                            <FaCloudUploadAlt className="text-5xl text-bakery-pista-deep mb-4 animate-bounce" />
                             <p className="text-bakery-chocolate font-black uppercase text-xs tracking-widest">Click or Drag to Upload Inspiration</p>
                             <p className="text-bakery-chocolate/40 text-[10px] mt-2">JPG, PNG, WEBP (Max 5MB)</p>
                           </>
@@ -393,26 +393,26 @@ function CustomizationForm() {
           <aside className="lg:col-span-4 space-y-8">
             <div className="card-premium p-8 bg-bakery-chocolate text-bakery-cream space-y-6">
               <h3 className="text-xl font-serif font-black flex items-center space-x-3">
-                <span className="text-bakery-rose text-2xl font-serif font-black">!</span>
+                <span className="text-bakery-pista-deep text-2xl font-serif font-black">!</span>
                 <span>Pro Baking Guidelines</span>
               </h3>
               <ul className="space-y-4 text-sm font-medium opacity-80 leading-relaxed">
                 <li className="flex items-start space-x-3">
-                  <span className="w-1.5 h-1.5 bg-bakery-rose rounded-full mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 bg-bakery-pista-deep rounded-full mt-1.5 shrink-0" />
                   <span>Multi-tiered designs require a minimum of 1.5kg (2 tiers) or 2.5kg (3 tiers).</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <span className="w-1.5 h-1.5 bg-bakery-rose rounded-full mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 bg-bakery-pista-deep rounded-full mt-1.5 shrink-0" />
                   <span>Custom orders must be placed at least 48 hours in advance.</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <span className="w-1.5 h-1.5 bg-bakery-rose rounded-full mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 bg-bakery-pista-deep rounded-full mt-1.5 shrink-0" />
                   <span>Reference images help our artists match your vision perfectly.</span>
                 </li>
               </ul>
             </div>
 
-            <div className="card-premium p-8 bg-white border border-bakery-pink/20 space-y-6">
+            <div className="card-premium p-8 bg-white border border-bakery-pista/20 space-y-6">
               <h3 className="text-xl font-serif font-black text-bakery-chocolate">Our Guarantee</h3>
               <p className="text-sm text-bakery-chocolate/50 font-medium leading-relaxed">
                 Every custom Ritual Cake is a unique masterpiece. We guarantee premium quality ingredients and meticulous artistic attention.
@@ -423,11 +423,11 @@ function CustomizationForm() {
                     <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Customer" />
                   </div>
                 ))}
-                <div className="w-10 h-10 rounded-full border-2 border-white bg-bakery-rose text-white text-[10px] flex items-center justify-center font-black">
+                <div className="w-10 h-10 rounded-full border-2 border-white bg-bakery-pista-deep text-white text-[10px] flex items-center justify-center font-black">
                   +1k
                 </div>
               </div>
-              <p className="text-xs font-bold text-bakery-rose">Join 1,000+ happy clients</p>
+              <p className="text-xs font-bold text-bakery-pista-deep">Join 1,000+ happy clients</p>
             </div>
           </aside>
         </div>

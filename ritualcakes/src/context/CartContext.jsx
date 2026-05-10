@@ -5,7 +5,8 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
-  const apiUrl = `https://ritualcakes-stg-92alpha.vercel.app/api/cart`;
+  const apiUrl = `/api/cart`; // Using relative path with /api prefix for proxy
+
 
   useEffect(() => {
     const fetchCart = async () => {

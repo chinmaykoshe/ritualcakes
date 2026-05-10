@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://ritualcakes-stg-92alpha.vercel.app/api/user",
+        "/api/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUser(response.data.user); // store backend user directly
@@ -43,7 +43,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.put(
-        "https://ritualcakes-stg-92alpha.vercel.app/api/user",
+        "/api/user",
         updatedData,
         {
           headers: {

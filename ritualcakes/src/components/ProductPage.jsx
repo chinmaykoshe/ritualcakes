@@ -81,11 +81,11 @@ const ProductPage = () => {
   if (!product) return null;
 
   return (
-    <div className="min-h-screen bg-bakery-cream/30 pt-10 pb-20">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-20">
       <div className="container mx-auto px-6 max-w-7xl">
         <button 
           onClick={() => navigate(-1)} 
-          className="inline-flex items-center space-x-2 text-bakery-chocolate hover:text-bakery-rose transition-colors mb-8 font-bold uppercase tracking-widest text-sm"
+          className="inline-flex items-center space-x-2 text-bakery-chocolate hover:text-bakery-pista-deep transition-colors mb-8 font-bold uppercase tracking-widest text-sm"
         >
           <FaArrowLeft /> <span>Back</span>
         </button>
@@ -97,7 +97,7 @@ const ProductPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="relative group"
           >
-            <div className="absolute -inset-4 bg-bakery-rose/10 rounded-[60px] group-hover:bg-bakery-rose/20 transition-all duration-700" />
+            <div className="absolute -inset-4 bg-bakery-pista/10 rounded-[60px] group-hover:bg-bakery-pista/20 transition-all duration-700" />
             <img 
               src={product.img} 
               alt={product.name} 
@@ -127,8 +127,8 @@ const ProductPage = () => {
                       onClick={() => setWeight(w)}
                       className={`px-6 py-3 rounded-2xl border-2 font-bold transition-all ${
                         weight === w 
-                          ? 'border-bakery-rose bg-bakery-rose text-white shadow-lg' 
-                          : 'border-bakery-pink hover:border-bakery-rose/30 text-bakery-chocolate'
+                          ? 'border-bakery-pista-deep bg-bakery-pista-deep text-white shadow-lg' 
+                          : 'border-bakery-pista/40 hover:border-bakery-pista-mid/50 text-bakery-chocolate'
                       }`}
                     >
                       {w}
@@ -148,7 +148,7 @@ const ProductPage = () => {
                       className={`px-6 py-3 rounded-2xl border-2 font-bold transition-all ${
                         shape === s 
                           ? 'border-bakery-chocolate bg-bakery-chocolate text-white shadow-lg' 
-                          : 'border-bakery-pink hover:border-bakery-rose/30 text-bakery-chocolate'
+                          : 'border-bakery-pista/40 hover:border-bakery-pista-mid/50 text-bakery-chocolate'
                       }`}
                     >
                       {s}
@@ -161,17 +161,17 @@ const ProductPage = () => {
               <div className="space-y-4">
                 <p className="text-sm font-black uppercase tracking-widest text-bakery-chocolate/40">Quantity</p>
                 <div className="flex items-center space-x-6">
-                  <div className="flex items-center bg-white rounded-2xl p-1 shadow-sm border border-bakery-pink">
+                  <div className="flex items-center bg-white rounded-2xl p-1 shadow-sm border border-bakery-pista/30">
                     <button 
                       onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-cream transition-colors text-bakery-chocolate"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-pista-light transition-colors text-bakery-chocolate"
                     >
                       <FaMinus />
                     </button>
                     <span className="w-12 text-center font-black text-xl">{quantity}</span>
                     <button 
                       onClick={() => setQuantity(q => q + 1)}
-                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-cream transition-colors text-bakery-chocolate"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-bakery-pista-light transition-colors text-bakery-chocolate"
                     >
                       <FaPlus />
                     </button>
@@ -193,7 +193,7 @@ const ProductPage = () => {
 
         {/* Tabs Section */}
         <div className="mt-24">
-          <div className="flex space-x-12 border-b border-bakery-pink mb-12">
+          <div className="flex space-x-12 border-b border-bakery-pista/30 mb-12">
             {['Description', 'Reviews'].map((tab) => (
               <button
                 key={tab}
@@ -204,7 +204,7 @@ const ProductPage = () => {
               >
                 {tab}
                 {activeTab === tab.toLowerCase() && (
-                  <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 w-full h-1 bg-bakery-rose" />
+                  <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 w-full h-1 bg-bakery-pista-deep" />
                 )}
               </button>
             ))}
@@ -225,7 +225,7 @@ const ProductPage = () => {
         {relatedProducts.length > 0 && (
           <div className="mt-24 space-y-12">
             <h2 className="text-4xl font-serif font-bold">You Might Also Love</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               {relatedProducts.map((p) => (
                 <Card key={p.orderID} orderID={p.orderID} />
               ))}

@@ -19,7 +19,7 @@ export const OrderProvider = ({ children }) => {
         if (!token || !userEmail) {
           throw new Error('Missing authentication details'); 
         }
-        const response = await axios.get(`https://ritualcakes-stg-92alpha.vercel.app/api/orders/${userEmail}`, {
+        const response = await axios.get(`/api/orders/${userEmail}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -41,7 +41,7 @@ export const OrderProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      const response = await axios.post(`https://ritualcakes-stg-92alpha.vercel.app/api/orders`, orderData, {
+      const response = await axios.post(`/api/orders`, orderData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       });
 
@@ -55,7 +55,7 @@ export const OrderProvider = ({ children }) => {
   const deleteOrder = async (orderID) => {
     setLoading(true); 
     try {
-      await axios.delete(`https://ritualcakes-stg-92alpha.vercel.app/api/orders/${orderID}`, {
+      await axios.delete(`/api/orders/${orderID}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

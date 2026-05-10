@@ -16,14 +16,14 @@ function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-bakery-cream/20 pt-10 pb-32">
+    <div className="min-h-screen bg-bakery-pista-light/30 pt-10 pb-32">
       <div className="container mx-auto px-8 lg:px-16 xl:px-24">
         {/* Hero Section - Centered & Airy */}
         <header className="text-center mb-32 space-y-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-block px-6 py-2 bg-bakery-rose/10 text-bakery-rose rounded-full font-black text-xs uppercase tracking-[0.2em]"
+            className="inline-block px-6 py-2 bg-bakery-pista-light/60 text-bakery-pista-deep rounded-full font-black text-xs uppercase tracking-[0.2em] border border-bakery-pista/20"
           >
             Our Sweet Story
           </motion.div>
@@ -54,7 +54,7 @@ function About() {
             className="space-y-10"
           >
             <div className="space-y-6">
-              <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Philosophy</span>
+              <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Philosophy</span>
               <h2 className="text-5xl font-serif font-black text-bakery-chocolate">The Ritual of Baking</h2>
             </div>
             <p className="text-2xl text-bakery-chocolate/70 leading-relaxed italic font-serif">
@@ -65,12 +65,12 @@ function About() {
             </p>
             <div className="flex space-x-12 pt-4">
               <div className="space-y-1">
-                <div className="text-4xl font-black text-bakery-rose">500+</div>
+                <div className="text-4xl font-black text-bakery-pista-deep">500+</div>
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Cakes Baked</div>
               </div>
-              <div className="w-px h-12 bg-bakery-pink/30" />
+              <div className="w-px h-12 bg-bakery-pista/30" />
               <div className="space-y-1">
-                <div className="text-4xl font-black text-bakery-rose">1k+</div>
+                <div className="text-4xl font-black text-bakery-pista-deep">1k+</div>
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Happy Clients</div>
               </div>
             </div>
@@ -97,7 +97,7 @@ function About() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
               {values.map((v, i) => (
                 <div key={i} className="text-center space-y-6 group">
-                  <div className="w-24 h-24 bg-bakery-cream rounded-[32px] flex items-center justify-center mx-auto text-bakery-rose text-4xl shadow-sm group-hover:bg-bakery-rose group-hover:text-white transition-all duration-500 group-hover:-translate-y-2">
+                  <div className="w-24 h-24 bg-bakery-pista-light rounded-[32px] flex items-center justify-center mx-auto text-bakery-pista-deep text-4xl shadow-sm group-hover:bg-bakery-pista-deep group-hover:text-white transition-all duration-500 group-hover:-translate-y-2">
                     {v.icon}
                   </div>
                   <h3 className="text-2xl font-serif font-black text-bakery-chocolate">{v.title}</h3>
@@ -130,10 +130,10 @@ function About() {
             className="order-1 lg:order-2 space-y-12"
           >
             <div className="space-y-6">
-              <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Leadership</span>
+              <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Leadership</span>
               <h2 className="text-5xl font-serif font-black text-bakery-chocolate">Meet the Heart Behind the Oven</h2>
             </div>
-            <p className="text-2xl text-bakery-chocolate/70 leading-relaxed italic border-l-8 border-bakery-rose pl-8 font-serif">
+            <p className="text-2xl text-bakery-chocolate/70 leading-relaxed italic border-l-8 border-bakery-pista-deep pl-8 font-serif">
               "We don't just sell cakes; we share joy. Seeing the smile on a client's face when they see their dream cake is why we do what we do."
             </p>
             <p className="text-lg text-bakery-chocolate/60 leading-relaxed font-medium">
@@ -141,7 +141,7 @@ function About() {
             </p>
             <div className="pt-6">
               <h4 className="text-2xl font-serif font-black text-bakery-chocolate">Jyoti Joshi</h4>
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-bakery-rose">Founder & Lead Artisan</span>
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-bakery-pista-deep">Founder & Lead Artisan</span>
             </div>
           </motion.div>
         </section>
@@ -149,9 +149,9 @@ function About() {
         {/* Client Love - Clear Grid */}
         <section className="py-24">
           <div className="text-center mb-24 space-y-6">
-            <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Feedback</span>
+            <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Feedback</span>
             <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate">Client Love</h2>
-            <div className="flex justify-center text-bakery-rose space-x-1.5 text-xl">
+            <div className="flex justify-center text-bakery-pista-deep space-x-1.5 text-xl">
               {[...Array(5)].map((_, i) => <FaStar key={i} />)}
             </div>
           </div>
@@ -164,13 +164,13 @@ function About() {
               >
                 <FaQuoteLeft className="text-5xl text-bakery-rose/10" />
                 <p className="text-xl italic text-bakery-chocolate/70 leading-relaxed font-medium">"{r.text}"</p>
-                <div className="flex items-center space-x-5 pt-8 border-t border-bakery-pink/20">
-                  <div className="w-14 h-14 bg-bakery-rose rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="flex items-center space-x-5 pt-8 border-t border-bakery-pista/20">
+                  <div className="w-14 h-14 bg-bakery-pista-deep rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
                     {r.name.charAt(0)}
                   </div>
                   <div>
                     <h4 className="font-black text-bakery-chocolate text-lg">{r.name}</h4>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-bakery-rose/60">Verified Client</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-bakery-pista-deep/60">Verified Client</span>
                   </div>
                 </div>
               </motion.div>

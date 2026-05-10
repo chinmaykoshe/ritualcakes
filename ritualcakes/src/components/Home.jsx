@@ -47,8 +47,8 @@ function Home() {
       {/* Hero Section - Elegant & Spacious */}
       <section className="relative min-h-screen flex items-center overflow-hidden pb-20">
         {/* Background Accents */}
-        <div className="absolute top-0 right-0 w-2/3 h-full bg-bakery-pink/10 rounded-l-[200px] -z-10" />
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-bakery-rose/5 rounded-full blur-3xl -z-10" />
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-bakery-pista/10 rounded-l-[200px] -z-10" />
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-bakery-pista/5 rounded-full blur-3xl -z-10" />
         
         <div className="container mx-auto px-8 lg:px-16 xl:px-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -58,9 +58,9 @@ function Home() {
               transition={{ duration: 0.8 }}
               className="lg:col-span-7 space-y-10"
             >
-              <div className="inline-flex items-center space-x-3 px-5 py-2 bg-white/80 backdrop-blur-sm border border-bakery-pink/30 rounded-full shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-bakery-rose animate-pulse" />
-                <span className="text-bakery-rose font-black text-xs uppercase tracking-[0.2em]">The Ultimate Baking Ritual</span>
+              <div className="inline-flex items-center space-x-3 px-5 py-2 bg-white/80 backdrop-blur-sm border border-bakery-pista/30 rounded-full shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-bakery-pista-deep animate-pulse" />
+                <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-[0.2em]">The Ultimate Baking Ritual</span>
               </div>
               
               <h1 className="text-6xl md:text-7xl xl:text-8xl font-serif font-black text-bakery-chocolate leading-[1.1]">
@@ -91,7 +91,7 @@ function Home() {
               className="lg:col-span-5 relative"
             >
               <div className="relative z-10 w-full aspect-square max-w-lg mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-tr from-bakery-rose/20 to-transparent rounded-full blur-2xl animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-bakery-pista-deep/20 to-transparent rounded-full blur-2xl animate-pulse" />
                 <img 
                   src={assets.blueberryCheesecake} 
                   alt="Signature Cake" 
@@ -116,7 +116,7 @@ function Home() {
                 transition={{ delay: i * 0.2 }}
                 className="group space-y-6"
               >
-                <div className="w-20 h-20 bg-bakery-cream rounded-3xl flex items-center justify-center mx-auto text-bakery-rose text-3xl shadow-premium group-hover:bg-bakery-rose group-hover:text-white transition-all duration-500 group-hover:-translate-y-2">
+                <div className="w-20 h-20 bg-bakery-pista-light rounded-3xl flex items-center justify-center mx-auto text-bakery-pista-deep text-3xl shadow-premium group-hover:bg-bakery-pista-deep group-hover:text-white transition-all duration-500 group-hover:-translate-y-2">
                   {f.icon}
                 </div>
                 <h3 className="text-2xl font-serif font-black text-bakery-chocolate tracking-tight">{f.title}</h3>
@@ -132,14 +132,14 @@ function Home() {
         <div className="container mx-auto px-8 lg:px-16 xl:px-24">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div className="space-y-6 max-w-2xl">
-              <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Our Selection</span>
+              <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Our Selection</span>
               <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate">Discover Our Specials</h2>
               <p className="text-lg text-bakery-chocolate/60 font-medium">A curated selection of our most loved ritual cakes, baked fresh every morning.</p>
             </div>
             <button onClick={() => navigate('/cakes')} className="btn-outline px-10 py-4">View All Cakes</button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
             {["rituals5", "rituals6", "rituals1", "rituals10"].map((id, i) => (
               <motion.div
                 key={id}
@@ -166,7 +166,7 @@ function Home() {
               className="space-y-10"
             >
               <div className="space-y-6">
-                <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Bespoke Rituals</span>
+                <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Bespoke Rituals</span>
                 <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate leading-tight">Your Dream Cake, <br /> Our Artistry</h2>
                 <p className="text-lg text-bakery-chocolate/60 font-medium leading-relaxed">
                   Can't find exactly what you're looking for? Let's build it together. Choose your flavor, theme, and size, and we'll bring your vision to life.
@@ -179,8 +179,8 @@ function Home() {
                   { n: 2, t: "Choose Your Theme & Decor" },
                   { n: 3, t: "Set the Date for Delivery" }
                 ].map((item) => (
-                  <div key={item.n} className="flex items-center space-x-5 p-5 bg-bakery-cream/30 rounded-[24px] border border-bakery-pink/10 hover:border-bakery-rose/30 transition-colors">
-                    <div className="w-10 h-10 bg-bakery-rose text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg">{item.n}</div>
+                  <div key={item.n} className="flex items-center space-x-5 p-5 bg-bakery-pista-light/30 rounded-[24px] border border-bakery-pista/10 hover:border-bakery-pista-mid/30 transition-colors">
+                    <div className="w-10 h-10 bg-bakery-pista-deep text-white rounded-full flex items-center justify-center font-black text-sm shadow-lg">{item.n}</div>
                     <span className="font-bold text-bakery-chocolate">{item.t}</span>
                   </div>
                 ))}
@@ -209,7 +209,7 @@ function Home() {
       {/* Process Section - Atmospheric Glass Section */}
       <section className="py-40 relative overflow-hidden bg-bakery-chocolate text-bakery-cream">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] bg-repeat" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-bakery-rose/10 rounded-full blur-[120px] -z-0" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-bakery-pista-deep/10 rounded-full blur-[120px] -z-0" />
         
         <div className="container mx-auto px-8 lg:px-16 xl:px-24 relative z-10 text-center">
           <motion.div 
@@ -221,7 +221,7 @@ function Home() {
             <h2 className="text-5xl lg:text-7xl font-serif font-black italic tracking-tight">How We Bake</h2>
             <div className="glass border-none p-12 md:p-20 rounded-[60px] shadow-2xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50" />
-              <FaQuoteLeft className="text-8xl text-bakery-rose/10 absolute top-10 left-10" />
+              <FaQuoteLeft className="text-8xl text-bakery-pista/10 absolute top-10 left-10" />
               
               <p className="text-2xl md:text-4xl font-serif leading-snug italic opacity-90 relative z-10">
                 "Every Ritual Cake is made with fresh, carefully chosen ingredients and a genuine love for baking. 
@@ -235,7 +235,7 @@ function Home() {
                   { v: "Hand", t: "Crafted" }
                 ].map((stat) => (
                   <div key={stat.t} className="space-y-2">
-                    <div className="text-4xl md:text-6xl font-black text-bakery-rose">{stat.v}</div>
+                    <div className="text-4xl md:text-6xl font-black text-bakery-pista-deep">{stat.v}</div>
                     <div className="text-xs font-black uppercase tracking-[0.3em] opacity-40">{stat.t}</div>
                   </div>
                 ))}
@@ -249,9 +249,9 @@ function Home() {
       <section className="py-32 bg-bakery-cream/20">
         <div className="container mx-auto px-8 lg:px-16 xl:px-24">
           <div className="text-center mb-24 space-y-6">
-            <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Testimonials</span>
+            <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Testimonials</span>
             <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate">Words From Our Clients</h2>
-            <div className="flex justify-center text-bakery-rose space-x-1.5 text-xl">
+            <div className="flex justify-center text-bakery-pista-deep space-x-1.5 text-xl">
               {[...Array(5)].map((_, i) => <FaStar key={i} />)}
             </div>
           </div>
@@ -261,16 +261,16 @@ function Home() {
               <motion.div 
                 key={r.id}
                 whileHover={{ y: -12 }}
-                className="card-premium p-10 space-y-8 bg-white border border-bakery-pink/20"
+                className="card-premium p-10 space-y-8 bg-white border border-bakery-pista/20"
               >
                 <p className="text-xl italic text-bakery-chocolate/70 leading-relaxed font-medium">"{r.text}"</p>
-                <div className="flex items-center space-x-5 pt-8 border-t border-bakery-pink/20">
-                  <div className="w-14 h-14 bg-bakery-rose rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="flex items-center space-x-5 pt-8 border-t border-bakery-pista/20">
+                  <div className="w-14 h-14 bg-bakery-pista-deep rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
                     {r.name.charAt(0)}
                   </div>
                   <div>
                     <h4 className="font-black text-bakery-chocolate text-lg">{r.name}</h4>
-                    <span className="text-xs font-black uppercase tracking-widest text-bakery-rose/60">Verified Order</span>
+                    <span className="text-xs font-black uppercase tracking-widest text-bakery-pista-deep/60">Verified Order</span>
                   </div>
                 </div>
               </motion.div>
@@ -285,8 +285,8 @@ function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24 items-center">
             <div className="lg:col-span-5 space-y-12">
               <div className="space-y-6">
-                <span className="text-bakery-rose font-black text-xs uppercase tracking-widest">Location</span>
-                <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate">Visit Our Bakery</h2>
+                <span className="text-bakery-pista-deep font-black text-xs uppercase tracking-widest">Location</span>
+                <h2 className="text-5xl lg:text-6xl font-serif font-black text-bakery-chocolate">Visit Our Shop</h2>
                 <p className="text-xl text-bakery-chocolate/60 font-medium leading-relaxed">
                   Visit our cozy shop in the heart of Dronagiri. Experience the aroma of freshly baked magic and pick up your favorite treats.
                 </p>
@@ -294,7 +294,7 @@ function Home() {
               
               <div className="space-y-8">
                 <div className="flex items-start space-x-6 group">
-                  <div className="w-12 h-12 bg-bakery-cream rounded-2xl flex items-center justify-center text-bakery-rose text-xl shadow-sm group-hover:bg-bakery-rose group-hover:text-white transition-all">
+                  <div className="w-12 h-12 bg-bakery-pista-light rounded-2xl flex items-center justify-center text-bakery-pista-deep text-xl shadow-sm group-hover:bg-bakery-pista-deep group-hover:text-white transition-all">
                     <FaMapMarkerAlt />
                   </div>
                   <div>
@@ -303,7 +303,7 @@ function Home() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-6 group">
-                  <div className="w-12 h-12 bg-bakery-cream rounded-2xl flex items-center justify-center text-bakery-rose text-xl shadow-sm group-hover:bg-bakery-rose group-hover:text-white transition-all">
+                  <div className="w-12 h-12 bg-bakery-pista-light rounded-2xl flex items-center justify-center text-bakery-pista-deep text-xl shadow-sm group-hover:bg-bakery-pista-deep group-hover:text-white transition-all">
                     <FaPhone />
                   </div>
                   <div>

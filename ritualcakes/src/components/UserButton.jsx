@@ -7,7 +7,6 @@ function UserButton() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    surname: "",
     mobile: "",
     address: "",
     dob: "",
@@ -20,7 +19,6 @@ function UserButton() {
     if (user) {
       setFormData({
         name: user.name || "",
-        surname: user.surname || "",
         mobile: user.mobile || "",
         address: user.address || "",
         dob: user.dob || "",
@@ -45,7 +43,7 @@ function UserButton() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bakery-cream px-4 py-16 text-center text-bakery-chocolate">
+      <div className="min-h-screen bg-bakery-pista-light/30 px-4 py-16 text-center text-bakery-chocolate">
         Loading...
       </div>
     );
@@ -53,26 +51,26 @@ function UserButton() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-bakery-cream px-4 py-16">
+      <div className="min-h-screen bg-bakery-pista-light/30 px-4 py-16">
         <p className="mx-auto max-w-md bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-600">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-bakery-cream px-4 py-16 md:py-24">
+    <div className="min-h-screen bg-bakery-pista-light/30 px-4 py-16 md:py-24">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6">
           <Link
             to="/"
-            className="font-montserrat text-sm font-semibold text-bakery-chocolate hover:text-bakery-rose"
+            className="font-montserrat text-sm font-semibold text-bakery-chocolate hover:text-bakery-pista-deep"
           >
             &larr; Back to home
           </Link>
         </div>
 
         <div className="mb-8 text-center">
-          <p className="mb-2 font-montserrat text-xs font-semibold uppercase tracking-[0.2em] text-bakery-rose">
+          <p className="mb-2 font-montserrat text-xs font-semibold uppercase tracking-[0.2em] text-bakery-pista-deep">
             Your account
           </p>
           <h1 className="text-3xl font-bold text-bakery-chocolate md:text-4xl">Your Information</h1>
@@ -98,23 +96,23 @@ function UserButton() {
             {!isEditing ? (
               <>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
-                    <span className="block font-semibold text-bakery-chocolate">Name</span>
-                    {user.name} {user.surname}
+                  <p className="border border-bakery-pista/30 bg-bakery-pista-light/60 px-4 py-3 text-sm text-customGray">
+                    <span className="block font-semibold text-bakery-chocolate">Full Name</span>
+                    {user.name}
                   </p>
-                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                  <p className="border border-bakery-pista/30 bg-bakery-pista-light/60 px-4 py-3 text-sm text-customGray">
                     <span className="block font-semibold text-bakery-chocolate">Email</span>
                     {user.email}
                   </p>
-                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                  <p className="border border-bakery-pista/30 bg-bakery-pista-light/60 px-4 py-3 text-sm text-customGray">
                     <span className="block font-semibold text-bakery-chocolate">Mobile</span>
                     {user.mobile || "Not added"}
                   </p>
-                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray">
+                  <p className="border border-bakery-pista/30 bg-bakery-pista-light/60 px-4 py-3 text-sm text-customGray">
                     <span className="block font-semibold text-bakery-chocolate">Date of Birth</span>
                     {formattedDOB || "Not added"}
                   </p>
-                  <p className="border border-bakery-pink bg-bakery-cream/60 px-4 py-3 text-sm text-customGray md:col-span-2">
+                  <p className="border border-bakery-pista/30 bg-bakery-pista-light/60 px-4 py-3 text-sm text-customGray md:col-span-2">
                     <span className="block font-semibold text-bakery-chocolate">Address</span>
                     {user.address || "Not added"}
                   </p>
@@ -144,13 +142,9 @@ function UserButton() {
               </>
             ) : (
               <form onSubmit={handleEditSubmit} className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="name">Name</label>
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="name">Full Name</label>
                   <input className="input-premium" id="name" name="name" value={formData.name} onChange={handleEditChange} />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="surname">Surname</label>
-                  <input className="input-premium" id="surname" name="surname" value={formData.surname} onChange={handleEditChange} />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-bakery-chocolate" htmlFor="mobile">Mobile</label>
